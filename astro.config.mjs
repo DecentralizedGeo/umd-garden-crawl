@@ -2,11 +2,7 @@
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 
-const canonicalSite = 'https://gardencrawl.netlify.app';
-const site =
-  process.env.CONTEXT === 'production' && process.env.URL
-    ? process.env.URL
-    : canonicalSite;
+const site = 'https://gardencrawl.easierdata.org';
 
 // https://astro.build/config
 export default defineConfig({
