@@ -1,0 +1,553 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import { siteConfig } from '../lib/site-config';
+
+interface Props {
+  title: string;
+  description: string;
+  // Marks <body> with a `home` class as a page-identity hook for Home's
+  // own styles (e.g. the grid-bg hero). Falls back to a path check so it
+  // still applies if a future page forgets to pass it explicitly.
+  home?: boolean;
+}
+
+const { title, description, home = false } = Astro.props;
+const path = Astro.url.pathname;
+const normalized = path.endsWith('/') ? path : `${path}/`;
+const isHome = home || normalized === '/';
+
+// Live IA routes only — never /gardens/, /categories/, /submissions/#status,
+// or /proofmode-setup/ (Delta: header hrefs are live IA routes only).
+// Participate is deliberately absent: it is the `.header-cta` button next to
+// the theme toggle, not a nav tab. Do not re-add it here.
+const headerLinks = [
+  { href: '/proofmode/', label: 'Proofmode' },
+  { href: '/compete/', label: 'Compete' },
+  { href: '/explore/', label: 'Explore' },
+  { href: '/privacy/', label: 'Privacy' },
+  { href: '/help/', label: 'Help' },
+];
+
+const footerLinks = [
+  { href: '/about/', label: 'About' },
+  { href: '/ecosystem/', label: 'Ecosystem' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body class:list={[isHome && 'home']}>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="frame">
+      <!-- Announcement strip: global chrome on every route, scrolls away (not sticky). -->
+      <div class="announcement">
+        <span class="mono announcement-status">
+          <span class="announcement-dot" aria-hidden="true"></span>
+          Accepting submissions
+        </span>
+        <span class="announcement-sep" aria-hidden="true"></span>
+        <span class="mono announcement-dates">{siteConfig.eventDatesShort}</span>
+        <a class="mono announcement-link" href="/participate/">Start the walkthrough →</a>
+      </div>
+
+      <!-- Sticky header: identical on every page. -->
+      <header class="site-header">
+        <a class="brand" href="/">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.4" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+            <path d="M7.5 12.4l3 3 6-6.6"></path>
+          </svg>
+          <span class="brand-name">{siteConfig.eventTitle}</span>
+        </a>
+
+        <nav class="site-nav" aria-label="Primary">
+          <ul>
+            {
+              headerLinks.map((link) => (
+                <li>
+                  <a
+                    class="mono"
+                    href={link.href}
+                    aria-current={normalized === link.href ? 'page' : undefined}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <div class="header-actions">
+          <button class="theme-toggle mono" type="button" data-theme-toggle aria-label="Switch theme">
+            <svg class="to-light" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <circle cx="12" cy="12" r="4.2"></circle>
+              <path d="M12 2v2.6M12 19.4V22M2 12h2.6M19.4 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"></path>
+            </svg>
+            <svg class="to-dark" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11z"></path>
+            </svg>
+            <span class="to-light">Light</span>
+            <span class="to-dark">Dark</span>
+          </button>
+          <a class="header-cta mono" href="/participate/">Participate</a>
+          <button
+            class="hamburger"
+            type="button"
+            data-menu-toggle
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            aria-label="Open menu"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="1.5" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Boring accessible mobile menu: hidden by default, no JS framework. -->
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <nav aria-label="Primary">
+          <ul>
+            {
+              headerLinks.map((link) => (
+                <li>
+                  <a href={link.href} aria-current={normalized === link.href ? 'page' : undefined}>
+                    {link.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+        <div class="mobile-menu-actions">
+          <button class="theme-toggle mono" type="button" data-theme-toggle aria-label="Switch theme">
+            <svg class="to-light" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <circle cx="12" cy="12" r="4.2"></circle>
+              <path d="M12 2v2.6M12 19.4V22M2 12h2.6M19.4 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"></path>
+            </svg>
+            <svg class="to-dark" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11z"></path>
+            </svg>
+            <span class="to-light">Light theme</span>
+            <span class="to-dark">Dark theme</span>
+          </button>
+          <a class="header-cta mono" href="/participate/">Participate</a>
+        </div>
+      </div>
+
+      <slot />
+
+      <footer class="site-footer">
+        <span class="mono footer-event">{siteConfig.eventTitle} &middot; {siteConfig.eventDatesShort}</span>
+        <nav aria-label="Footer">
+          <ul>
+            {
+              footerLinks.map((link) => (
+                <li>
+                  <a class="mono" href={link.href} aria-current={normalized === link.href ? 'page' : undefined}>
+                    {link.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </footer>
+    </div>
+
+    <script is:inline>
+      (function () {
+        var THEME_KEY = 'Garden Crawl-theme';
+        var root = document.documentElement;
+
+        function currentTheme() {
+          return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+        }
+
+        document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var next = currentTheme() === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', next);
+            try {
+              localStorage.setItem(THEME_KEY, next);
+            } catch (err) {
+              // No persistence available — the toggle still works this visit.
+            }
+          });
+        });
+
+        var menuToggle = document.querySelector('[data-menu-toggle]');
+        var menu = document.getElementById('mobile-menu');
+        if (!menuToggle || !menu) return;
+
+        function closeMenu() {
+          menu.hidden = true;
+          menuToggle.setAttribute('aria-expanded', 'false');
+        }
+
+        function openMenu() {
+          menu.hidden = false;
+          menuToggle.setAttribute('aria-expanded', 'true');
+          var firstLink = menu.querySelector('a');
+          if (firstLink) firstLink.focus();
+        }
+
+        menuToggle.addEventListener('click', function () {
+          if (menu.hidden) openMenu();
+          else closeMenu();
+        });
+
+        menu.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape') {
+            closeMenu();
+            menuToggle.focus();
+          }
+        });
+
+        menu.addEventListener('click', function (event) {
+          if (event.target instanceof HTMLElement && event.target.closest('a')) closeMenu();
+        });
+
+        document.addEventListener('click', function (event) {
+          if (menu.hidden) return;
+          var target = event.target;
+          if (target instanceof Node && !menu.contains(target) && target !== menuToggle && !menuToggle.contains(target)) {
+            closeMenu();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .skip-link {
+    position: absolute;
+    left: var(--space-sm, 1rem);
+    top: 0.75rem;
+    z-index: 100;
+    padding: 0.6rem 1rem;
+    background: var(--accent-solid);
+    color: var(--accent-on);
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus {
+    transform: none;
+  }
+
+  /* Page frame: centred cap, hairline edges (Story 1-2). Every route's
+     announcement/header/content/footer sit inside this one wrapper so wide
+     displays don't open a void between columns. */
+  .frame {
+    box-sizing: border-box;
+    max-width: 1760px;
+    margin-inline: auto;
+    border-inline: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .announcement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 11px 24px;
+    background: var(--accent-solid);
+    color: var(--accent-on);
+    text-align: center;
+  }
+
+  .announcement-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .announcement-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: #d6f4fa;
+    flex-shrink: 0;
+  }
+
+  .announcement-sep {
+    width: 1px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  .announcement-dates {
+    letter-spacing: 0.06em;
+  }
+
+  .announcement-link {
+    color: var(--accent-on);
+    letter-spacing: 0.06em;
+    text-decoration: underline;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    box-sizing: border-box;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 16px 48px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+
+  .brand:hover {
+    color: var(--text);
+  }
+
+  .brand-name {
+    font-weight: 700;
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+  }
+
+  .site-nav ul {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-nav a {
+    display: inline-block;
+    padding: 9px 13px;
+    color: var(--text-3);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+
+  .site-nav a:hover,
+  .site-nav a:focus-visible {
+    color: var(--accent);
+  }
+
+  .site-nav a[aria-current='page'] {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 14px;
+    background: transparent;
+    border: 1px solid var(--border-2);
+    color: var(--text-3);
+    cursor: pointer;
+    font-family: var(--font-mono);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--accent-solid);
+    color: var(--accent);
+  }
+
+  .theme-toggle .to-dark {
+    display: none;
+  }
+
+  :root[data-theme='light'] .theme-toggle .to-light {
+    display: none;
+  }
+
+  :root[data-theme='light'] .theme-toggle .to-dark {
+    display: inline-flex;
+  }
+
+  .header-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 11px 16px;
+    background: var(--accent-solid);
+    color: var(--accent-on);
+    text-decoration: none;
+    letter-spacing: 0.07em;
+  }
+
+  .header-cta:hover,
+  .header-cta:focus-visible {
+    color: var(--accent-on);
+    opacity: 0.85;
+  }
+
+  .hamburger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: 0;
+    color: var(--text);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 18px 18px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mobile-menu[hidden] {
+    display: none;
+  }
+
+  .mobile-menu nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-menu nav a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text-3);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .mobile-menu nav li:last-child a {
+    border-bottom: none;
+  }
+
+  .mobile-menu nav a[aria-current='page'] {
+    color: var(--text);
+  }
+
+  .mobile-menu-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .mobile-menu-actions .theme-toggle,
+  .mobile-menu-actions .header-cta {
+    justify-content: center;
+    min-height: 48px;
+  }
+
+  .site-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    padding: 24px 48px 30px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    margin-top: auto;
+  }
+
+  .footer-event {
+    color: var(--text-4);
+  }
+
+  .site-footer nav ul {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-footer nav a {
+    color: var(--text-3);
+    text-decoration: none;
+  }
+
+  .site-footer nav a:hover,
+  .site-footer nav a:focus-visible,
+  .site-footer nav a[aria-current='page'] {
+    color: var(--accent);
+  }
+
+  @media (max-width: 900px) {
+    .frame {
+      max-width: 575px;
+    }
+
+    .announcement {
+      gap: 10px;
+      padding: 10px 16px;
+      font-size: 0.9em;
+    }
+
+    .announcement-link {
+      display: none;
+    }
+
+    .site-header {
+      padding: 12px 18px;
+    }
+
+    .site-nav,
+    .header-actions .theme-toggle,
+    .header-actions .header-cta {
+      display: none;
+    }
+
+    .hamburger {
+      display: flex;
+    }
+
+    .site-footer {
+      justify-content: center;
+      text-align: center;
+      padding: 20px 18px 26px;
+    }
+  }
+
+  @media (min-width: 901px) {
+    .mobile-menu {
+      display: none;
+    }
+  }
+</style>

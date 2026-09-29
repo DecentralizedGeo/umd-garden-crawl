@@ -1,0 +1,477 @@
+---
+import DocumentTitleBlock from '../../components/DocumentTitleBlock.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import Provisional from '../../components/Provisional.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../lib/site-config';
+import { splitProvisional } from '../../lib/provisional';
+
+const verifiedLine = `instructions verified against ${siteConfig.proofMode.version} on ${siteConfig.proofMode.verifiedOn}`;
+
+const checklist = [
+  'Camera permission enabled',
+  'Correct wallet connected',
+  'Location permission enabled',
+  'Sepolia selected',
+  'Location sharing enabled',
+  'Auto-attest enabled',
+  'Location Protocol Attestation on',
+  'IPFS connection test succeeds',
+  'Network access available',
+  'Media & automatic uploads on',
+];
+---
+
+<BaseLayout
+  title={`Proofmode — ${siteConfig.eventTitle}`}
+  description="Configure Proofmode, make a Capture, and retry a failed upload or failed transaction — written for eligible students."
+>
+  <main id="main" data-document>
+    <DocumentTitleBlock>
+      <Fragment slot="title">Proofmode</Fragment>
+      <Fragment slot="lead">
+        <p>
+          Set these options before you visit a Garden, then use Proofmode&rsquo;s camera to make a Capture. The
+          steps below are for eligible students. In-app names can shift slightly by version; if a screen looks
+          different, follow the event team&rsquo;s latest walkthrough.
+        </p>
+      </Fragment>
+    </DocumentTitleBlock>
+
+    <div class="doc-body">
+      <section class="intro" aria-labelledby="what-is-proofmode">
+        <h2 id="what-is-proofmode">What is Proofmode?</h2>
+        <p>
+          Proofmode is a free, open-source camera app built by the Guardian Project. Every photo it takes carries its
+          own evidence &mdash; sensor data, a device signature, and location details &mdash; bound to the image the
+          instant you press the shutter, not attached afterward.
+        </p>
+        <p>
+          That&rsquo;s why it&rsquo;s the only camera this event accepts. A Garden Crawl Submission has to be checkable by
+          anyone, not just by us, so every entry needs a Capture whose proof can be independently verified &mdash; the
+          same glass-to-glass chain the rest of this site explains. The steps below get Proofmode configured before you
+          visit a Garden.
+        </p>
+        <a class="more" href="/ecosystem/">See how the whole chain works →</a>
+      </section>
+
+      <p class="data verified-line">
+        {
+          splitProvisional(verifiedLine).map((seg) =>
+            seg.provisional ? <Provisional>{seg.text}</Provisional> : seg.text,
+          )
+        }
+      </p>
+
+      <section aria-labelledby="setup">
+        <div class="doc-section-head">
+          <h2 id="setup">Set up Proofmode</h2>
+        </div>
+        <div class="setup-grid">
+          <section class="setup-card" aria-labelledby="location-settings">
+            <div class="setup-card-head">
+              <span class="setup-num mono">01</span>
+              <span class="mono setup-path">Settings ▸ Location</span>
+            </div>
+            <h3 id="location-settings">Location settings</h3>
+            <ol class="setup-steps">
+              <li><span class="n">1</span>Open Settings, then Location.</li>
+              <li><span class="n">2</span>Turn on Location sharing &mdash; allow only while using the app.</li>
+              <li><span class="n">3</span>Turn on Location Protocol Attestation.</li>
+            </ol>
+            <p class="note">
+              Location evidence is how the event checks a Capture happened inside a published Submission area.
+            </p>
+          </section>
+
+          <section class="setup-card" aria-labelledby="wallet-settings">
+            <div class="setup-card-head">
+              <span class="setup-num mono">02</span>
+              <span class="mono setup-path">Settings ▸ Wallet</span>
+            </div>
+            <h3 id="wallet-settings">Wallet settings</h3>
+            <ol class="setup-steps">
+              <li><span class="n">1</span>Connect or confirm the wallet that gives you a Wallet address.</li>
+              <li><span class="n">2</span>Choose the Sepolia network.</li>
+              <li><span class="n">3</span>Turn on Auto-attest on Capture.</li>
+            </ol>
+            <p class="note">
+              Your Wallet address is the public identifier on your Attestations &mdash; your name, email, and phone are
+              never shown.
+            </p>
+          </section>
+
+          <section class="setup-card" aria-labelledby="auto-sync">
+            <div class="setup-card-head">
+              <span class="setup-num mono">03</span>
+              <span class="mono setup-path">Auto Sync ▸ IPFS</span>
+            </div>
+            <h3 id="auto-sync">Auto Sync and IPFS</h3>
+            <ol class="setup-steps">
+              <li><span class="n">1</span>Open the Filebase/IPFS settings.</li>
+              <li><span class="n">2</span>Paste the organizer-provided upload token.</li>
+            </ol>
+            <div class="secret" role="note">
+              <p class="mono secret-label">Secret handling</p>
+              <p>Never share or publish the upload token. Paste it only inside Proofmode.</p>
+            </div>
+            <ol class="setup-steps" start="3">
+              <li><span class="n">3</span>Select Test Connection and wait for success.</li>
+              <li><span class="n">4</span>Turn on media uploads and automatic uploads, then save.</li>
+            </ol>
+          </section>
+        </div>
+      </section>
+    </div>
+
+    <section class="row" aria-labelledby="checklist">
+      <div class="row-label">
+        <span class="mono">Checklist</span>
+        <h2 id="checklist">Before your first Capture</h2>
+      </div>
+      <div class="row-body">
+        <ul class="check-grid">
+          {
+            checklist.map((item) => (
+              <li class="check-row">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--ok)"
+                  stroke-width="2.6"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12.5l4.5 4.5L19 7"></path>
+                </svg>
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="capture">
+      <div class="row-label">
+        <span class="mono">Capture</span>
+        <h2 id="capture">Make a Capture</h2>
+      </div>
+      <div class="row-body">
+        <p>
+          Return to the gallery and use Proofmode&rsquo;s in-app camera &mdash; imported media is not supported for this
+          event. Stay inside a published Submission area, then make an original Capture related to the Garden.
+        </p>
+        <p>
+          With Auto-attest and automatic uploads on, Proofmode creates a Capture and Proofset, submits the Attestation,
+          and uploads media to the event&rsquo;s IPFS node.
+        </p>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="retry">
+      <div class="row-label">
+        <span class="mono">Troubleshoot</span>
+        <h2 id="retry">Failed uploads or transactions</h2>
+      </div>
+      <div class="row-body">
+        <p>
+          Keep the Capture. If an upload fails, reopen it in Proofmode and try Upload to Filebase again &mdash; if Test
+          Connection failed earlier, fix Auto Sync first.
+        </p>
+        <p>
+          If an on-chain transaction fails, resend the Attestation &mdash; for example Notarize On-Chain from the share
+          menu. Keep the app open until it finishes, and don&rsquo;t delete the Capture while you retry.
+        </p>
+        <div class="reading-row">
+          <ExternalLink
+            class="reading-chip"
+            href="https://gitlab.com/guardianproject/proofmode/proofmode-android/-/blob/main/docs/location-protocol/tutorial-create-location-attestations.md"
+          >
+            Proofmode: Create location attestations
+          </ExternalLink>
+          <ExternalLink
+            class="reading-chip"
+            href="https://gitlab.com/guardianproject/proofmode/proofmode-android/-/blob/main/docs/location-protocol/howto-manual-attest-and-upload.md"
+          >
+            Proofmode: Manually attest and upload
+          </ExternalLink>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  main#main[data-document] {
+    max-width: 1760px;
+    padding: 0;
+  }
+
+  .doc-body {
+    padding: 48px 48px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+
+  .doc-section-head {
+    margin-bottom: 22px;
+  }
+
+  .doc-section-head h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 74ch;
+  }
+
+  .intro h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+
+  .intro p {
+    color: var(--text-2);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .intro .more {
+    display: inline-block;
+    margin-top: 2px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    text-decoration: none;
+  }
+
+  .verified-line {
+    max-width: 74ch;
+    color: var(--text-3);
+    margin: 0;
+  }
+
+  .setup-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .setup-card {
+    border: 1px solid var(--border-2);
+    background: var(--surface);
+    padding: 26px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .setup-card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .setup-num {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: 1px solid var(--border-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+  }
+
+  .setup-path {
+    color: var(--text-3);
+  }
+
+  .setup-card h3 {
+    font-size: 1.1875rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--text);
+    margin: 0;
+  }
+
+  .setup-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .setup-steps li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    color: var(--text-2);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  .setup-steps .n {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--border-2);
+    color: var(--text-3);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  .setup-card p.note {
+    color: var(--text-3);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    border-top: 1px solid var(--rule);
+    padding-top: 14px;
+    margin: auto 0 0;
+  }
+
+  .secret {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 16px;
+    background: var(--warn-soft);
+    border-left: 3px solid var(--warn-edge);
+  }
+
+  .secret p.secret-label {
+    color: var(--warn);
+    margin: 0;
+  }
+
+  .secret p {
+    color: var(--notice-text);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 208px 1fr;
+    gap: 40px;
+    padding: 44px 48px 46px;
+    border-top: 1px solid var(--border);
+  }
+
+  .row-label {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .row-label .mono {
+    color: var(--accent);
+  }
+
+  .row-label h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .row-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 74ch;
+  }
+
+  .row-body p {
+    color: var(--text-2);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .check-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-2);
+    font-size: 0.9375rem;
+  }
+
+  .check-row svg {
+    flex-shrink: 0;
+  }
+
+  .reading-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 6px;
+  }
+
+  .reading-row :global(a.reading-chip) {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border: 1px solid var(--border-2);
+    color: var(--text-3);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  .reading-row :global(a.reading-chip:hover),
+  .reading-row :global(a.reading-chip:focus-visible) {
+    border-color: var(--accent-solid);
+    color: var(--accent);
+  }
+
+  @media (max-width: 1100px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .setup-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .doc-body {
+      margin: 0 18px;
+      padding: 32px 0 56px;
+    }
+
+    .row {
+      padding: 28px 18px;
+    }
+  }
+</style>

@@ -1,0 +1,52 @@
+[
+  {
+    "uid": "0x7ee98a56bf71fb1618aa69df766876a35b8948de17b010e51e500384fc5718e1",
+    "attester": "0xbEd1e6E87bB90D4c3B84CD78e7B4D92fD949d5cE",
+    "proofsetCid": "bafybeidrobg72ez6vjz2x5cw3fob56dxwnr66ppgs726fcwdzc3grdiugq",
+    "latitude": 38.9823808846995,
+    "longitude": -76.9398162793368,
+    "eventTimestamp": 1787067931814,
+    "gardenName": "Lt. Richard Collins III Plaza",
+    "image": "01.jpg"
+  },
+  {
+    "uid": "0x9ff0aeabedfcda6f89dd0fd5496af61698c78c3d820f7d031bf99496dfe77ab9",
+    "attester": "0xbEd1e6E87bB90D4c3B84CD78e7B4D92fD949d5cE",
+    "proofsetCid": "bafybeihrzdle3v7ab6as6mhgfz2yxo3b3j4ucasnuibjds3t5gpq3q5et4",
+    "latitude": 38.9868262270465,
+    "longitude": -76.9476091861725,
+    "eventTimestamp": 1787146526342,
+    "gardenName": "The Chef’s Garden",
+    "image": "02.jpg"
+  },
+  {
+    "uid": "0xac0f41dac4012bca2357e14a9ca519b3d3138d0cff00df3bc8744d44136f468f",
+    "attester": "0xbEd1e6E87bB90D4c3B84CD78e7B4D92fD949d5cE",
+    "proofsetCid": "bafybeigucxs2uhtvodtbvcroqsyqk36y3parfwqd4v4mdvhkd5xekk55xq",
+    "latitude": 38.9867670508102,
+    "longitude": -76.9424368813634,
+    "eventTimestamp": 1787147320012,
+    "gardenName": "Pollinator Garden at Edward St. John Learning and Teaching Center",
+    "image": "03.jpg"
+  },
+  {
+    "uid": "0x44225ffdb520d3be55171045abb64f6411df9145fa99b2e28965f711f83591e5",
+    "attester": "0xbEd1e6E87bB90D4c3B84CD78e7B4D92fD949d5cE",
+    "proofsetCid": "bafybeigy6ysecknnlqk5qkfxsv2z7mxahjqyvp3xbvinlaqosrcou3xpla",
+    "latitude": 38.9906959841028,
+    "longitude": -76.9415482319891,
+    "eventTimestamp": 1787069773677,
+    "gardenName": "Weber Memorial Garden",
+    "image": "04.jpg"
+  },
+  {
+    "uid": "0x2dee4158f6816fd6d25ed5dbf09d106afd5a7b8e52763c60d75fa066fe56405f",
+    "attester": "0xbEd1e6E87bB90D4c3B84CD78e7B4D92fD949d5cE",
+    "proofsetCid": "bafybeieanbroemao6vejfyww7bwnyuc26dtoanwq7iqqfzhi5gzbynp654",
+    "latitude": 38.9891841821373,
+    "longitude": -76.9488603528589,
+    "eventTimestamp": 1787143888566,
+    "gardenName": "J. Landon Reeve IV Reading Garden",
+    "image": "05.jpg"
+  }
+]

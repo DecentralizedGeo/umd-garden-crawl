@@ -1,0 +1,25 @@
+---
+// Flags content pending organizer approval: a dotted underline plus a
+// small footnote marker, like an editorial annotation. Field-level — wraps
+// only the unresolved phrase, not the whole sentence it's part of.
+---
+
+<span class="provisional">
+  <slot />
+  <span class="visually-hidden"> (provisional — pending organizer approval)</span>
+</span>
+
+<style>
+  .provisional {
+    text-decoration: underline dotted var(--accent) 1.5px;
+    text-underline-offset: 3px;
+    color: inherit;
+  }
+
+  .provisional::after {
+    content: '†';
+    color: var(--accent);
+    font-weight: 700;
+    margin-left: 0.15em;
+  }
+</style>

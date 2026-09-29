@@ -1,0 +1,244 @@
+---
+import { siteConfig } from '../lib/site-config';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL('/og-image.png', Astro.site);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href={canonicalURL} />
+<meta name="generator" content={Astro.generator} />
+<title>{title}</title>
+<meta name="description" content={description} />
+
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:image" content={ogImageURL} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content={siteConfig.eventTitle} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageURL} />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+/>
+
+<!--
+  Theme FOUC guard (ADR 0004). Runs before first paint so the wrong theme
+  never flashes. Mirrors src/lib/theme.ts's resolveTheme (kept in sync by
+  hand — this inline script can't import a module before paint).
+-->
+<script is:inline>
+  (function () {
+    try {
+      var stored = localStorage.getItem('Garden Crawl-theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = stored === 'light' || stored === 'dark' ? stored : prefersDark ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (err) {
+      // localStorage/matchMedia unavailable — default dark tokens on :root apply.
+    }
+  })();
+</script>
+
+<style is:global>
+  /* Reset adapted from Andy Bell's "more modern CSS reset" */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  figure,
+  blockquote,
+  dl,
+  dd {
+    margin: 0;
+  }
+
+  body {
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  a {
+    text-decoration-skip-ink: auto;
+  }
+
+  img,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  :target {
+    scroll-margin-block: 5ex;
+  }
+
+  /*
+   * Token roles (spec: Implementation Decisions → Token roles). Dark is the
+   * :root default/fallback; [data-theme="light"] is the complete light
+   * alternate. The inline FOUC script above sets data-theme before first
+   * paint, so this fallback only matters if JS is unavailable.
+   */
+  :root {
+    --bg: #0b1015;
+    --surface: #0e151b;
+    --border: #1c2a33;
+    --border-2: #24333d;
+    --rule: #1a262e;
+    --text: #e4ecf0;
+    --text-2: #a8bcc6;
+    --text-3: #93a7b1;
+    --text-4: #5f7b88;
+    --accent: #7ed4e2;
+    --accent-solid: #1f7a8c;
+    --accent-on: #ffffff;
+    --accent-soft: rgba(31, 122, 140, 0.16);
+    --ok: #6fc79b;
+    --ok-soft: rgba(79, 158, 119, 0.14);
+    --warn: #d9b070;
+    --warn-strong: #f0d9a8;
+    --warn-soft: rgba(184, 138, 46, 0.09);
+    --warn-edge: #b88a2e;
+    --notice-text: #ddd0b4;
+    --grid: rgba(126, 212, 226, 0.07);
+
+    --font-sans: 'Archivo', 'IBM Plex Sans', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+
+  :root[data-theme='light'] {
+    --bg: #f6f3ec;
+    --surface: #ece7db;
+    --border: #ccc3ae;
+    --border-2: #cfc5ae;
+    --rule: #e0d9c8;
+    --text: #14100b;
+    --text-2: #3c362b;
+    --text-3: #5c5445;
+    --text-4: #8a8272;
+    --accent: #1a6a79;
+    --accent-solid: #1f7a8c;
+    --accent-on: #ffffff;
+    --accent-soft: rgba(31, 122, 140, 0.1);
+    --ok: #2f6b4d;
+    --ok-soft: rgba(63, 122, 92, 0.12);
+    --warn: #8a4b2a;
+    --warn-strong: #6d3a1e;
+    --warn-soft: #f8f2e6;
+    --warn-edge: #8a4b2a;
+    --notice-text: #3c362b;
+    --grid: rgba(20, 16, 11, 0.05);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: var(--accent);
+    text-underline-offset: 3px;
+  }
+
+  a:hover {
+    color: var(--text);
+  }
+
+  /* Story 11: every interactive control keeps a visible 2px accent outline. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Labels, eyebrows, nav, machine-value keys — never prose. */
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* uids, CIDs, wallet addresses, coordinates, timestamps, status strings. */
+  .data {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    letter-spacing: 0.01em;
+    font-weight: 500;
+  }
+
+  /* Hero-only backdrop (Home, Help). */
+  .grid-bg {
+    background-image: linear-gradient(to right, var(--grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>

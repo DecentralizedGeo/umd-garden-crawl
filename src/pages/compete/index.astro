@@ -1,0 +1,242 @@
+---
+import { getCollection } from "astro:content";
+import DocumentTitleBlock from "../../components/DocumentTitleBlock.astro";
+import Provisional from "../../components/Provisional.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { sortCategoriesByOrder } from "../../lib/categories";
+import { splitProvisional } from "../../lib/provisional";
+import { siteConfig } from "../../lib/site-config";
+
+const categories = sortCategoriesByOrder(await getCollection("categories"));
+---
+
+<BaseLayout
+  title={`Compete — ${siteConfig.eventTitle}`}
+  description={`Event categories and rules, Submission-validity criteria, and scoring edge cases for the ${siteConfig.eventTitle}.`}
+>
+  <main id="main" data-document>
+    <DocumentTitleBlock>
+      <Fragment slot="title">Compete</Fragment>
+      <Fragment slot="lead">
+        <p>
+          Take part for a chance to win gift-card prizes while helping build a trusted record of UMD’s living landscape.
+        </p>
+      </Fragment>
+    </DocumentTitleBlock>
+
+    <div class="doc-body">
+      <section aria-labelledby="categories">
+        <h2 id="categories">Categories</h2>
+        <div class="cat-grid">
+          {
+            categories.map((category) => {
+              const body = category.data.detail ? `${category.data.summary} ${category.data.detail}` : category.data.summary;
+              const num = String(category.data.order).padStart(2, "0");
+              const headingId = `${category.id}-heading`;
+              return (
+                <section class="cat-card" id={category.id} aria-labelledby={headingId}>
+                  <div class="cat-card-head">
+                    <span class="cat-num mono">{num}</span>
+                    <h3 id={headingId}>{category.data.name}</h3>
+                  </div>
+                  <p class="body">
+                    {splitProvisional(body).map((seg) => (seg.provisional ? <Provisional>{seg.text}</Provisional> : seg.text))}
+                  </p>
+                  {category.data.tieBreaker && (
+                    <p class="tb">
+                      {splitProvisional(category.data.tieBreaker).map((seg) =>
+                        seg.provisional ? <Provisional>{seg.text}</Provisional> : seg.text,
+                      )}
+                    </p>
+                  )}
+                </section>
+              );
+            })
+          }
+        </div>
+      </section>
+
+      <section aria-labelledby="rules">
+        <h2 id="rules">Rules</h2>
+        <div class="rules-list">
+          <section class="rule-item" aria-labelledby="submission-area">
+            <h3 id="submission-area">What is a Garden Submission Area?</h3>
+            <p>
+              A Garden Submission Area is a geofenced boundary around one or more gardens on UMD's Arboretum campus. It defines
+              where a Submission must be captured to qualify for competition categories and prize eligibility.
+            </p>
+            <p>
+              Photos captured with Proofmode include cryptographically signed location and capture-time data. This data is used to
+              verify the authenticity of a Submission and confirm where and when it was captured.
+            </p>
+            <p>
+              Any Submission captured within the UMD campus boundary is eligible for the event. However, only those captured
+              within an approved Garden Submission Area qualify for competition categories.
+            </p>
+            <p>
+              Refer to the <a href="/explore">event map</a> for the current boundaries of each Garden Submission Area.
+            </p>
+          </section>
+        </div>
+        <section class="rule-item" aria-labelledby="eligible-submission">
+          <h3 id="eligible-submission">What counts as a Submission?</h3>
+          <p>
+            A Submission is a photo captured with Proofmode's in-app camera, containing a valid C2PA signature, and submitted
+            during the event period, {siteConfig.eventDates}
+          </p>
+          <p>
+            To be eligible, a Submission must be captured within the UMD campus boundary, have an on-chain Attestation, be
+            uploaded to and retrievable from IPFS, and pass reviewer approval. Submissions . All Submissions appear on the Public
+            Submission map and must also comply with the event’s content and conduct rules map.
+          </p>
+        </section>
+        <section class="rule-item" aria-labelledby="qualifying-submission">
+          <h3 id="qualifying-submission">What is a Qualifying Entry?</h3>
+          <p>A Qualifying Entry is a Submission captured within an approved Garden Submission Area.</p>
+          <p>
+            There is no limit to the number of Submissions you can make during the event. However, only Qualifying Entries count
+            for prize eligibility.
+          </p>
+        </section>
+        <section class="rule-item" aria-labelledby="multiple-photos">
+          <h3 id="multiple-photos">What about taking multiple photos from a single Garden Submission Area in a day?</h3>
+          <p>
+            You may submit multiple photos from the same Garden Submission Area on the same calendar day. For the <b
+              >Garden Crawl Challenge</b
+            >, <b>Daily Visitor</b>, and <b>Explorer</b> categories, only one Qualifying Entry from each Garden Submission Area per
+            participant per calendar day is used to determine a winner.
+          </p>
+          <p><em>This does not impact the selection of a photo for Nature in Focus.</em></p>
+        </section>
+        <section class="rule-item" aria-labelledby="rejected">
+          <h3 id="rejected">Can my submission be rejected?</h3>
+          <p>
+            Yes. We may reject a submission that violates event rules. Rejected Submissions are removed from the Public Submission
+            Map and do not count in the competition or prize eligibility. Submissions captured outside the UMD campus boundary are
+            automatically rejected. Note, rejected Submission metadata remain on the blockchain and photos can remain retrievable
+            through IPFS.
+          </p>
+        </section>
+        <section class="rule-item" aria-labelledby="prizes">
+          <h3 id="prizes">What are the prizes?</h3>
+          <p>
+            Each category is awarded a $100 gift-card prize. Each of the three selected Nature in Focus entries receives a $50
+            gift card.
+          </p>
+        </section>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  main#main[data-document] {
+    max-width: 1760px;
+    padding: 0;
+  }
+
+  .doc-body {
+    padding: 48px 48px 84px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .doc-body h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin: 0 0 20px;
+  }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .cat-card {
+    border: 1px solid var(--border-2);
+    background: var(--surface);
+    padding: 26px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .cat-card-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .cat-num {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: 1px solid var(--border-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+  }
+
+  .cat-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+
+  .cat-card p.body {
+    color: var(--text-2);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .cat-card p.tb {
+    color: var(--text-3);
+    font-size: 0.8125rem;
+    margin: 2px 0 0;
+  }
+
+  .rules-list {
+    border-top: 1px solid var(--rule);
+  }
+
+  .rule-item {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .rule-item h3 {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--accent);
+    margin: 0;
+  }
+
+  .rule-item p {
+    color: var(--text-2);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    /* max-width: max-content; */
+    margin: 0;
+  }
+
+  @media (max-width: 1100px) {
+    .cat-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .doc-body {
+      padding: 32px 18px 56px;
+    }
+  }
+</style>

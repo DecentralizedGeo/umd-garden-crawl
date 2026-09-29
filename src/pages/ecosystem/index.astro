@@ -1,0 +1,366 @@
+---
+import DocumentTitleBlock from '../../components/DocumentTitleBlock.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../lib/site-config';
+---
+
+<BaseLayout
+  title={`How a Capture is checked — ${siteConfig.eventTitle}`}
+  description="Why a Garden Crawl Submission can be checked without taking this website’s word for it."
+>
+  <main id="main" data-document>
+    <DocumentTitleBlock>
+      <Fragment slot="title">How a Capture is checked</Fragment>
+      <Fragment slot="lead">
+        <p>
+          When you make a Capture with Proofmode, the resulting Submission can be checked without taking this
+          website&rsquo;s word for it. This page explains that path. Configure the app on the{' '}
+          <a href="/proofmode/">Proofmode</a> page. Event rules live on <a href="/privacy/">Privacy</a>.
+        </p>
+        <p>
+          The Garden Crawl is a public contest that uses this model: original Captures in official Gardens, published so
+          others can check them.
+        </p>
+      </Fragment>
+    </DocumentTitleBlock>
+
+    <div class="doc-body">
+      <section class="doc-section" aria-labelledby="the-path">
+        <h2 id="the-path">The path</h2>
+        <p>
+          Home teases this chain as glass-to-glass verification. This page is the long form. A Capture moves through
+          four stages: Capture, Upload, Attest, and Verify.
+        </p>
+        <ol class="path-strip">
+          <li><span class="mono">01</span> Capture</li>
+          <li><span class="mono">02</span> Upload</li>
+          <li><span class="mono">03</span> Attest</li>
+          <li><span class="mono">04</span> Verify</li>
+        </ol>
+      </section>
+
+      <section class="doc-section" aria-labelledby="capture">
+        <h2 id="capture">Capture</h2>
+        <p>
+          At shutter-press, Proofmode creates a Capture and a Proofset &mdash; the cryptographic evidence bundled with
+          that Capture. Signing happens on the device. This website does not hold your signing key and does not create
+          the Proofset.
+        </p>
+        <p>
+          The Wallet address is the persistent, pseudonymous public identifier associated with your later Attestations.
+          It is not your name, email, or phone number. See <a href="/privacy/">Privacy</a> for what the Public
+          submission map does and does not display.
+        </p>
+        <p>
+          This event&rsquo;s unit of competition is an original Capture made with Proofmode&rsquo;s in-app camera, not a
+          photo imported from elsewhere or a file stored only on our servers. Setup is on the{' '}
+          <a href="/proofmode/">Proofmode</a> page. Validity rules are on <a href="/compete/">Compete</a>.
+        </p>
+      </section>
+
+      <section class="doc-section" aria-labelledby="upload">
+        <h2 id="upload">Upload</h2>
+        <p>
+          If the only copy of a Capture lives as a filename on one organization&rsquo;s servers, anyone checking it has
+          to trust that organization still has the file, has not changed it, and will keep serving it.
+        </p>
+        <p>
+          IPFS addresses Capture media and related Proofset files by a content identifier (CID). The CID is derived
+          from a hash of the bytes. Change a byte, and the identifier changes. An Attestation can point at those files
+          so reviewers and the Public submission map retrieve the same bytes.
+        </p>
+        <p>
+          Organizer pinning, unpinning, and takedown are explained on{' '}
+          <a href="/privacy/#decentralized-storage">Privacy&rsquo;s decentralized storage</a> and{' '}
+          <a href="/privacy/#removal">removal</a> sections. This page does not restate those rules.
+        </p>
+      </section>
+
+      <section class="doc-section" aria-labelledby="attest">
+        <h2 id="attest">Attest</h2>
+        <p>
+          The chain is a shared public ledger. Proofmode publishes the Attestation there so the claim is not held only
+          inside the app or on this campaign site.
+        </p>
+        <p>
+          An Attestation is a structured on-chain claim: this Capture, this Wallet address, this place and time,
+          pointing at the CID and Proofset. Anyone can look that Attestation up without asking this website. This site
+          does not submit chain activity.
+        </p>
+        <p>
+          Eligibility and prizes rest on that public claim remaining look-uppable, not on a private database on this
+          site. An on-chain Attestation is not removed by unpinning media or hiding a Submission on the Public
+          submission map. See <a href="/privacy/#decentralized-storage">Privacy&rsquo;s decentralized storage</a>.
+        </p>
+      </section>
+
+      <section class="doc-section" aria-labelledby="verify">
+        <h2 id="verify">Verify</h2>
+        <p>
+          Checking means reading the ledger, fetching the bytes by CID, and confirming they still match &mdash; without
+          this website as intermediary for that check. A checker confirms the file hashes match the anchored CID, the
+          C2PA manifest is valid, and the ledger receipt matches.
+        </p>
+        <p>
+          A checkable Attestation is a signed claim of place and time. It is not proof that the GPS signal was
+          authentic.
+        </p>
+        <p>
+          This website is not the verifier of record. Judges, other participants, or a stranger can check.
+        </p>
+      </section>
+
+      <section class="doc-section" aria-labelledby="checker">
+        <h2 id="checker">What a checker looks at</h2>
+        <dl class="details">
+          <dt>Wallet address</dt>
+          <dd>The persistent, pseudonymous public identifier associated with the Attestations.</dd>
+          <dt>CID</dt>
+          <dd>How the Capture media and related Proofset bytes are addressed on IPFS.</dd>
+          <dt>Attestation</dt>
+          <dd>The public ledger claim a checker looks up.</dd>
+        </dl>
+      </section>
+
+      <section class="doc-section" aria-labelledby="location-protocol">
+        <h2 id="location-protocol">Location Protocol</h2>
+        <p>
+          Location Protocol is a specification for portable, signed location records. It is not a camera app and not
+          this website.
+        </p>
+        <p>
+          Proofmode uses it so the place-and-time claim is bound to the Capture media by CID and can be checked outside
+          this site. The in-app control is Location Protocol Attestation; how to turn it on is on the{' '}
+          <a href="/proofmode/">Proofmode</a> page.
+        </p>
+        <figure class="envelope">
+          <figcaption class="visually-hidden">
+            Location Protocol wraps place, time, and CID. Proofmode publishes that as the event Attestation.
+          </figcaption>
+          <div class="envelope-box" aria-hidden="true">
+            <p class="mono envelope-kicker">Location Protocol</p>
+            <ul class="envelope-fields">
+              <li>Place</li>
+              <li>Time</li>
+              <li>CID</li>
+            </ul>
+            <p class="envelope-foot">Published as the event Attestation</p>
+          </div>
+        </figure>
+        <p>
+          This Garden Crawl is that standard used in a public contest: official Gardens, original Captures, Submissions
+          others can check.
+        </p>
+        <p>
+          Location Protocol was designed by EASIER Data in collaboration with Astral. Proofmode, from the Guardian
+          Project, is the Capture app that emits the Attestation.
+        </p>
+      </section>
+
+      <section class="doc-section" aria-labelledby="event-rules">
+        <h2 id="event-rules">Event rules</h2>
+        <p>
+          <a href="/privacy/">Privacy</a> is the canonical event-rules page. Read it before you install Proofmode or
+          make a Capture. Use these sections rather than this teaching page for the lists and warnings:
+        </p>
+        <ul>
+          <li><a href="/privacy/#not-public">What is not public</a></li>
+          <li><a href="/privacy/#may-be-public">What may be public</a></li>
+          <li><a href="/privacy/#coordinates">Precise Capture coordinates</a></li>
+          <li><a href="/privacy/#sensitive-content">Identifiable people and sensitive content</a></li>
+          <li><a href="/privacy/#decentralized-storage">Decentralized storage</a></li>
+          <li><a href="/privacy/#removal">Requesting media removal</a></li>
+        </ul>
+      </section>
+
+      <section class="doc-section" aria-labelledby="further-reading">
+        <h2 id="further-reading">Further reading</h2>
+        <p>Optional background. The wording on this page is the published explanation for the event.</p>
+        <ul>
+          <li>
+            <ExternalLink href="https://spec.decentralizedgeo.org/">Location Protocol specification</ExternalLink>
+          </li>
+          <li>
+            <ExternalLink href="https://easierdata.org/updates/2025/2025-05-19-location-protocol-spec">
+              EASIER Data: Location Protocol specification
+            </ExternalLink>
+          </li>
+          <li>
+            <ExternalLink href="https://easierdata.org/updates/2025/2025-11-17-preserving-proof-proofmode-integration">
+              How Proofmode stores proofs and location claims
+            </ExternalLink>
+          </li>
+          <li>
+            <ExternalLink
+              href="https://gitlab.com/guardianproject/proofmode/proofmode-android/-/blob/main/docs/location-protocol/tutorial-create-location-attestations.md"
+            >
+              Proofmode: Create location attestations
+            </ExternalLink>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  main#main[data-document] {
+    max-width: 1760px;
+    padding: 0;
+  }
+
+  .doc-body {
+    padding: 48px 48px 84px;
+  }
+
+  .doc-section {
+    margin-top: var(--space-lg, 2rem);
+  }
+
+  .doc-section:first-child {
+    margin-top: 0;
+  }
+
+  h2 {
+    max-width: 74ch;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin: 0 0 var(--space-sm, 1rem);
+    color: var(--text);
+  }
+
+  p,
+  ul,
+  ol,
+  dl,
+  figure {
+    max-width: 74ch;
+    line-height: 1.65;
+    color: var(--text-2);
+    margin: 0 0 var(--space-sm, 1rem);
+  }
+
+  p:last-child,
+  ul:last-child,
+  ol:last-child,
+  dl:last-child,
+  figure:last-child {
+    margin-bottom: 0;
+  }
+
+  ul,
+  ol.path-strip {
+    padding-inline-start: 1.25rem;
+  }
+
+  .path-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.55rem 0;
+    list-style: none;
+    padding-inline-start: 0;
+    color: var(--text);
+  }
+
+  .path-strip li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-weight: 600;
+  }
+
+  .path-strip li:not(:last-child)::after {
+    content: '→';
+    margin-inline: 0.65rem 0.15rem;
+    font-weight: 400;
+    color: var(--text-3);
+  }
+
+  .path-strip .mono {
+    color: var(--text-3);
+    font-weight: 400;
+  }
+
+  .details {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-xs, 0.75rem) var(--space-sm, 1rem);
+  }
+
+  .details dt {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .details dd {
+    margin: 0;
+  }
+
+  .envelope {
+    margin: var(--space-sm, 1rem) 0;
+  }
+
+  .envelope-box {
+    border: 1px solid var(--border);
+    padding: 1rem 1.1rem;
+    background: var(--surface);
+  }
+
+  .envelope-kicker {
+    margin: 0 0 0.65rem;
+    color: var(--text-3);
+  }
+
+  .envelope-fields {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .envelope-fields li {
+    border: 1px solid var(--border-2);
+    padding: 0.2rem 0.55rem;
+    color: var(--text);
+    font-size: 0.9375rem;
+  }
+
+  .envelope-foot {
+    margin: 0;
+    color: var(--text-3);
+    font-size: 0.9375rem;
+  }
+
+  @media (max-width: 900px) {
+    .doc-body {
+      padding: 32px 18px 56px;
+    }
+
+    .path-strip {
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .path-strip li:not(:last-child)::after {
+      content: none;
+    }
+
+    .details {
+      grid-template-columns: 1fr;
+      gap: 0.2rem 0;
+    }
+
+    .details dt {
+      margin-top: 0.65rem;
+    }
+
+    .details dt:first-child {
+      margin-top: 0;
+    }
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+// One key/value line inside a glass-to-glass stage's `.spec` sample box.
+// Two variants only, because two are all the stage panels use: a label with
+// a data value, or a label with the green check that means "this one passed".
+//
+// The row owns its own styling rather than borrowing the calling page's:
+// a scoped `.spec-row` rule in index.astro could never match this element,
+// since Astro's scope attribute does not cross the component boundary.
+interface Props {
+  label: string;
+  value?: string;
+  /** Which token colours the value. Checkmark rows ignore it. */
+  tone?: 'text' | 'accent';
+  /** Render the pass checkmark instead of a value. */
+  check?: boolean;
+}
+
+const { label, value, tone = 'text', check = false } = Astro.props;
+---
+
+<div class="spec-row">
+  <span class="data label">{label}</span>
+  {
+    check ? (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2.4">
+        <path d="M5 12.5l4.5 4.5L19 7" />
+      </svg>
+    ) : (
+      <span class="data" style={`color: var(--${tone})`}>
+        {value}
+      </span>
+    )
+  }
+</div>
+
+<style>
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .spec-row:last-child {
+    border-bottom: 0;
+  }
+
+  .label {
+    color: var(--text-3);
+  }
+</style>

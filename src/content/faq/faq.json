@@ -1,0 +1,184 @@
+[
+  {
+    "id": "who-can-participate",
+    "category": "Event basics",
+    "question": "Who can participate?",
+    "answer": "This event is open to the UMD community at large. This includes students, faculty, and staff.",
+    "order": 1
+  },
+  {
+    "id": "when-is-the-event",
+    "category": "Event basics",
+    "question": "When is the event?",
+    "answer": "The event is scheduled for October 1–31, 2026.",
+    "order": 2
+  },
+  {
+    "id": "does-participation-cost-anything",
+    "category": "Event basics",
+    "question": "Does participation cost anything?",
+    "answer": "Nope! Participation is free for all. The only requirement is a compatible device with the Proofmode app installed.",
+    "order": 3
+  },
+  {
+    "id": "why-must-i-use-proofmode",
+    "category": "Proofmode",
+    "question": "Why must I use Proofmode?",
+    "answer": "Proofmode's in-app camera creates the Capture and associated Proofset used by the event's verification workflow.",
+    "order": 4
+  },
+  {
+    "id": "what-permissions-are-required",
+    "category": "Proofmode",
+    "question": "What permissions are required?",
+    "answer": "Camera, location while using the app, and network access are required for Capture and publication.",
+    "order": 5
+  },
+  {
+    "id": "what-if-my-upload-fails",
+    "category": "Proofmode",
+    "question": "What if my upload fails?",
+    "answer": "Retry the upload from within Proofmode. Keep the original Capture until the Submission succeeds or the event team provides additional guidance.",
+    "order": 6
+  },
+  {
+    "id": "what-if-the-blockchain-transaction-fails",
+    "category": "Proofmode",
+    "question": "What if the blockchain transaction fails?",
+    "answer": "Retry the failed transaction from within Proofmode. A Capture is not a complete Submission until the Attestation is recorded on-chain and the media is available for review.",
+    "order": 7
+  },
+  {
+    "id": "is-my-name-shown-publicly",
+    "category": "Wallets and identity",
+    "question": "Is my name shown publicly?",
+    "answer": "No. Participant names, phone numbers, and email addresses are not displayed publicly.",
+    "order": 8
+  },
+  {
+    "id": "what-identifies-a-submission",
+    "category": "Wallets and identity",
+    "question": "What identifies a submission?",
+    "answer": "The wallet address associated with the Attestation identifies the Submission in the Web3 system. The full address is displayed in the Submission details pane and may link multiple Submissions to the same wallet.",
+    "order": 9
+  },
+  {
+    "id": "is-participation-anonymous",
+    "category": "Wallets and identity",
+    "question": "Is participation anonymous?",
+    "answer": "Participation is pseudonymous rather than completely anonymous. Direct personal details are not shown, but the wallet address is a persistent public identifier.",
+    "order": 10
+  },
+  {
+    "id": "what-is-a-cryptographic-signature",
+    "category": "Signatures and blockchain",
+    "question": "What is a cryptographic signature?",
+    "answer": "A cryptographic signature is evidence that data was authorized by a particular cryptographic key and has not been changed since it was signed. It helps others verify the origin and integrity of a claim.",
+    "order": 11
+  },
+  {
+    "id": "what-is-an-attestation",
+    "category": "Signatures and blockchain",
+    "question": "What is an attestation?",
+    "answer": "An Attestation is a structured on-chain claim connecting a Capture with its verification metadata (location, cryptographic signature, Proofset). For this event, the Attestation connects a Proofmode Capture with metadata used by verification and the Public submission map.",
+    "order": 12
+  },
+  {
+    "id": "what-does-on-chain-mean",
+    "category": "Signatures and blockchain",
+    "question": "What does on-chain mean?",
+    "answer": "On-chain means that the Attestation was successfully published to the blockchain. The Attestation can remain accessible even if the Public submission map hides the Submission or the associated media becomes unavailable.",
+    "order": 13
+  },
+  {
+    "id": "does-blockchain-prove-a-photo-is-good",
+    "category": "Signatures and blockchain",
+    "question": "Does blockchain prove that a Capture is good?",
+    "answer": "No. Blockchain publication helps preserve and verify an Attestation. Event eligibility, appropriateness, media quality, and category qualification still depend on the event rules and review process.",
+    "order": 14
+  },
+  {
+    "id": "are-my-exact-coordinates-shown",
+    "category": "Location",
+    "question": "Are my exact coordinates shown?",
+    "answer": "Eligible Submissions are displayed at the coordinates recorded when the Capture was made. The event does not generalize those coordinates. Submissions outside the campus boundary are filtered from the Public submission map.",
+    "order": 15
+  },
+  {
+    "id": "is-gps-perfectly-accurate",
+    "category": "Location",
+    "question": "Is GPS perfectly accurate?",
+    "answer": "No. The displayed location depends on the device's GPS accuracy at capture time. Treat the location as Capture evidence, not as a guarantee of survey-grade precision.",
+    "order": 16
+  },
+  {
+    "id": "what-is-ipfs",
+    "category": "IPFS and media",
+    "question": "What is IPFS?",
+    "answer": "IPFS is a decentralized, content-addressed network. Media is referenced by content identifiers, and changing content produces a different identifier.",
+    "order": 17
+  },
+  {
+    "id": "how-long-is-media-pinned",
+    "category": "IPFS and media",
+    "question": "How long is media pinned?",
+    "answer": "The organizer plans to pin event media for at least two to three months after the event. After organizer pinning ends, continued retrieval is not guaranteed unless other IPFS nodes retain the content.",
+    "order": 18
+  },
+  {
+    "id": "can-a-submitted-photo-be-removed",
+    "category": "IPFS and media",
+    "question": "Can a Submission be removed?",
+    "answer": "Contact the event team through the published event email to request removal from the organizer-controlled IPFS node and Public submission map. The organizer may unpin the media and blacklist the Attestation from the Public submission map, but the on-chain Attestation remains and copies held by other IPFS nodes may remain accessible.",
+    "order": 19
+  },
+  {
+    "id": "can-i-photograph-people",
+    "category": "IPFS and media",
+    "question": "Can I photograph people?",
+    "answer": "Avoid identifiable people and private situations. Do not intentionally submit images containing children, identification documents, license plates, or sensitive personal circumstances. Submitted media is reviewed before public display.",
+    "order": 20
+  },
+  {
+    "id": "why-needs-review",
+    "category": "Review and map display",
+    "question": "Why does every submission say Needs review?",
+    "answer": "Every Submission is reviewed. The Attestation may be visible on the Public submission map while the associated media remains hidden.",
+    "order": 21
+  },
+  {
+    "id": "what-causes-rejection",
+    "category": "Review and map display",
+    "question": "What causes rejection?",
+    "answer": "A Submission may be rejected for inappropriate media, a location outside the campus boundary, unavailable media on the organizer's IPFS node, or another approved event-rule violation.",
+    "order": 22
+  },
+  {
+    "id": "does-rejected-count-toward-category",
+    "category": "Review and map display",
+    "question": "Does a rejected submission count toward a category?",
+    "answer": "No. Rejected Submissions do not count toward event categories, although the on-chain Attestation remains accessible.",
+    "order": 23
+  },
+  {
+    "id": "what-metadata-is-shown",
+    "category": "Review and map display",
+    "question": "What metadata is shown?",
+    "answer": "The Submission details pane uses raw Proofset metadata to populate its properties, along with the wallet address and Capture information defined by the Public submission map.",
+    "order": 24
+  },
+  {
+    "id": "is-immutable-the-same-as-permanently-available",
+    "category": "Technical explanations",
+    "question": "Is immutable the same as permanently available?",
+    "answer": "No. An Attestation may remain immutable while the associated IPFS media becomes unavailable if no node continues to retain it.",
+    "order": 25
+  },
+  {
+    "id": "is-the-public-map-the-complete-record",
+    "category": "Technical explanations",
+    "question": "Is the Public submission map the complete on-chain record of Attestations?",
+    "answer": "No. The Public submission map applies event and geographic filters, review status, media availability, and blacklist rules. An Attestation hidden from the Public submission map may still exist on-chain.",
+    "order": 26
+  }
+]

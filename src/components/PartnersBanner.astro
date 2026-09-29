@@ -1,0 +1,100 @@
+---
+import { siteConfig } from '../lib/site-config';
+
+// Continuous marquee (spec Story 29-30): a duplicated track scrolls
+// seamlessly; `prefers-reduced-motion` freezes it. No logo images — this
+// site has no image pipeline. Entities sourced from https://decentralizedgeo.org/.
+---
+
+<section class="partners" aria-label="Partners">
+  <p class="mono label">Presented in collaboration with</p>
+  <div class="marquee">
+    <div class="marquee-track">
+      <ul class="marquee-set">
+        {siteConfig.partners.map((name) => <li>{name}</li>)}
+      </ul>
+      <ul class="marquee-set" aria-hidden="true">
+        {siteConfig.partners.map((name) => <li>{name}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .partners {
+    padding: 30px 0 34px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .label {
+    margin: 0 0 18px;
+    padding: 0 48px;
+    color: var(--text-4);
+  }
+
+  .marquee {
+    overflow: hidden;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 38s linear infinite;
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+
+  .marquee-set {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .marquee-set li {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding-right: 40px;
+    color: var(--text-2);
+    font-size: 1.0625rem;
+    white-space: nowrap;
+  }
+
+  .marquee-set li::after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--border-2);
+  }
+
+  @media (max-width: 900px) {
+    .label {
+      padding: 0 18px;
+    }
+
+    .marquee-set li {
+      gap: 24px;
+      padding-right: 24px;
+      font-size: 0.9375rem;
+    }
+  }
+</style>

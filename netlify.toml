@@ -1,0 +1,8 @@
+[build]
+  command = "pnpm build"
+  publish = "dist"
+
+[[context.deploy-preview.headers]]
+  for = "/*"
+  [context.deploy-preview.headers.values]
+    X-Robots-Tag = "noindex"

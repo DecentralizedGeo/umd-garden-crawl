@@ -1,0 +1,68 @@
+---
+// Notice anatomy (spec Delta 8): warn-soft fill, 3px warn left edge,
+// full-bleed within its section, plus the required visible intent label.
+// The API is unchanged — only the visual restyle from the old bordered box.
+interface Props {
+  intent: 'privacy' | 'irreversible' | 'secret';
+}
+
+const labels = {
+  privacy: 'Privacy',
+  irreversible: 'Publication is irreversible',
+  secret: 'Secret handling',
+} as const;
+
+const { intent } = Astro.props;
+const label = labels[intent];
+---
+
+<div class="notice" data-intent={intent} role="note">
+  <p class="notice-label mono">{label}</p>
+  <div class="notice-body">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .notice {
+    display: grid;
+    grid-template-columns: 208px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+    padding: 1.6rem 0;
+    background: var(--warn-soft);
+    border-left: 3px solid var(--warn-edge);
+  }
+
+  .notice-label {
+    margin: 0;
+    color: var(--warn);
+  }
+
+  .notice-body {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--notice-text);
+    max-width: 74ch;
+  }
+
+  .notice-body :global(a) {
+    color: var(--warn-strong);
+  }
+
+  .notice-body :global(p) {
+    margin: 0;
+  }
+
+  .notice-body :global(p + p) {
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .notice {
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+      padding: 1.15rem 0;
+    }
+  }
+</style>

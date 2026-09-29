@@ -1,0 +1,673 @@
+---
+import Callout from "../../components/Callout.astro";
+import ExternalLink from "../../components/ExternalLink.astro";
+import Provisional from "../../components/Provisional.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { resolveSubmissionsMapUrl, siteConfig } from "../../lib/site-config";
+
+const submissionsMap = resolveSubmissionsMapUrl();
+
+// Five steps (Delta 1) — not seven. Step 1 folds Install/Sign in/Grant
+// permissions in as labelled sub-blocks. "Visit during the event" is a
+// constraint on Capture, not its own step. "Wait for verification" is the
+// Home glass-to-glass story, not a participant action, so it isn't here.
+const stepNames = ["Set up Proofmode", "Find a Garden", "Capture", "Confirm the Submission", "View on the Public submission map"];
+---
+
+<BaseLayout
+  title={`How to participate — ${siteConfig.eventTitle}`}
+  description="A five-step guide to set up Proofmode, find a Garden, make a Capture, confirm a Submission, and view it on the Public submission map."
+>
+  <main id="main" data-participate>
+    <section class="title-block">
+      <p class="mono title-eyebrow">Walkthrough · 5 steps</p>
+      <h1 class="title-h1">How to participate</h1>
+      <p class="title-lead">
+        Follow these five steps to get up and running and start participating in the {siteConfig.eventTitle}.
+      </p>
+    </section>
+
+    <!-- Progress rail: five segments, sticky under the header, tracks the
+         step in view. Visible at every viewport width; below the breakpoint
+         it keeps the same shape on the narrower page padding. -->
+    <div class="rail" data-rail>
+      <div class="rail-segments">
+        {stepNames.map((_, i) => <span class="seg" data-seg={i + 1} />)}
+      </div>
+      <div class="rail-status">
+        <span class="mono rail-active" data-rail-label>Step 01 of 05 · {stepNames[0]}</span>
+        <a class="mono rail-next" href="#step-2" data-rail-next>Next: {stepNames[1]} →</a>
+      </div>
+    </div>
+
+    <section class="row" id="step-1" data-step="1">
+      <div class="row-label">
+        <span class="mono">Step 01</span>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.4" aria-hidden="true">
+          <rect x="4" y="7" width="16" height="13" rx="1.5"></rect>
+          <circle cx="12" cy="13.5" r="3.4"></circle>
+          <path d="M9 7l1.4-2.4h3.2L15 7"></path>
+        </svg>
+      </div>
+      <div>
+        <h2>Set up Proofmode</h2>
+        <p>Install Proofmode before you visit a Garden.</p>
+
+        <div class="sub-block">
+          <p class="mono sub-block-label">Install</p>
+          <p>Download and install Proofmode.</p>
+          <div class="install-links">
+            <ExternalLink class="install-link" href="https://proofmode.org/">
+              <span>Proofmode site</span>
+            </ExternalLink>
+            <ExternalLink class="install-link" href="https://play.google.com/store/apps/details?id=org.witness.proofmode">
+              <span>Install from Google Play</span>
+            </ExternalLink>
+            <ExternalLink class="install-link" href="https://play.google.com/apps/testing/org.witness.proofmode">
+              <span>Join Google Play open testing</span>
+            </ExternalLink>
+          </div>
+          <p>You'll be using Proofmode&rsquo;s in-app camera to capture your photos.</p>
+        </div>
+
+        <div class="sub-block">
+          <p class="mono sub-block-label">Configure</p>
+          <p>
+            To participate, you must grant permissions and configure specific settings as to ensure that you can successfully
+            submit your photos for the event. Once configured, any photo you take in app will be automatically submitted.
+          </p>
+          <div class="chip-row">
+            <span class="chip chip-ok-outline">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg
+              >
+              Name, phone, email — never displayed
+            </span>
+            <span class="chip chip-warn-outline">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16v.1"></path></svg
+              >
+              Wallet address — your web3 identity
+            </span>
+          </div>
+        </div>
+
+        <div class="sub-block">
+          <p class="mono sub-block-label">Grant permissions</p>
+          <p>Proofmode needs:</p>
+          <div class="permissions-table">
+            <div class="permissions-row">
+              <p class="mono">Camera access</p>
+              <p>To make original Captures.</p>
+            </div>
+            <div class="permissions-row">
+              <p class="mono">Location access</p>
+              <p>While using the app, to record Capture location evidence.</p>
+            </div>
+            <div class="permissions-row">
+              <p class="mono">Network access</p>
+              <p>To publish Attestations and upload media.</p>
+            </div>
+          </div>
+          <p>For detailed instructions on setting up Proofmode, refer to the <a href="/proofmode/">Proofmode guide</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="row" id="step-2" data-step="2">
+      <div class="row-label">
+        <span class="mono">Step 02</span>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.4" aria-hidden="true">
+          <path d="M12 21s6.4-6.1 6.4-11A6.4 6.4 0 0 0 5.6 10c0 4.9 6.4 11 6.4 11z"></path>
+          <circle cx="12" cy="10" r="2.4"></circle>
+        </svg>
+      </div>
+      <div>
+        <h2>Find a Garden</h2>
+        <p>
+          Refer to the <a href="/explore">event map</a> for the current boundaries of each Garden Submission Area
+        </p>
+        <p>
+          Stay on permitted paths, follow posted campus and Garden guidance, avoid damaging plants, and respect other campus
+          users.
+        </p>
+      </div>
+    </section>
+
+    <div class="notice-slot">
+      <Callout intent="privacy">
+        <p>
+          Before you Capture or confirm a Submission: precise Capture coordinates, Wallet address, Proofset metadata, and IPFS
+          media is publicly exposed. See the{" "}
+          <a href="/privacy/">canonical field list on Privacy</a>.
+        </p>
+      </Callout>
+    </div>
+
+    <section class="row" id="step-3" data-step="3">
+      <div class="row-label">
+        <span class="mono">Step 03</span>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.4" aria-hidden="true">
+          <path d="M12 21V11"></path>
+          <path d="M12 13c0 0-3.6-.6-5.1-2.5C5.4 8.6 5.8 5 5.8 5s3.2.4 4.7 2.3C12 9.2 12 13 12 13z"></path>
+          <path d="M12 17c0 0 3.4-.6 4.9-2.4 1.5-1.8 1.3-4.4 1.3-4.4s-3 .5-4.5 2.3C12.2 14.3 12 17 12 17z"></path>
+        </svg>
+      </div>
+      <div>
+        <h2>Capture</h2>
+        <p>
+          Travel to a Garden Submission Area during {siteConfig.eventDates} and use Proofmode&rsquo;s in-app camera to capture a photo.
+        </p>
+        <p>
+          You may photograph plants, landscapes, distinctive features, or other subjects that meaningfully relate to the Garden.
+          Be respectful of the landscape, campus users, and site-specific guidance.
+        </p>
+        <p>
+          Avoid identifiable people and sensitive or private situations. Read the{" "}
+          <a href="/privacy/">media and storage policy</a> before you Capture.
+        </p>
+      </div>
+    </section>
+
+    <section class="row" id="step-4" data-step="4">
+      <div class="row-label">
+        <span class="mono">Step 04</span>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.4" aria-hidden="true">
+          <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+          <path d="M8.4 12.4l2.6 2.6 4.6-5.2"></path>
+        </svg>
+      </div>
+      <div>
+        <h2>Confirm the Submission</h2>
+        <p>
+          Confirm that the captured photo appears in the Proofmode gallery with C2PA signature badge. Once an upload cloud and
+          on-chain attestation badge appears on the capture to confirm if the capture was submitted and ready to be reviewed. An
+          Attestation without retrievable media is not an eligible Submission.
+        </p>
+      </div>
+    </section>
+
+    <section class="row row-last" id="step-5" data-step="5">
+      <div class="row-label">
+        <span class="mono">Step 05</span>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.4" aria-hidden="true">
+          <path d="M3 7l6-2.4 6 2.4 6-2.4v14L15 21l-6-2.4L3 21V7z"></path>
+          <path d="M9 4.6v14M15 7v14"></path>
+        </svg>
+      </div>
+      <div>
+        <h2>View on the Public submission map</h2>
+        <p>
+          A Submission in Needs review may appear without media. After approval, the Public submission map may display it as an
+          Observation, including media and Proofset-derived details. Rejected Submissions are not displayed.
+        </p>
+        <div class="status-table">
+          <div class="status-row status-row-head">
+            <p class="mono">Status</p>
+            <p class="mono">What the Public submission map shows</p>
+          </div>
+          <div class="status-row">
+            <p><span class="mono status-chip status-chip-warn"><span class="status-dot"></span>Needs review</span></p>
+            <p>May appear without media while review is pending.</p>
+          </div>
+          <div class="status-row">
+            <p><span class="mono status-chip status-chip-ok"><span class="status-dot"></span>Approved</span></p>
+            <p>May be displayed as an Observation, including media and Proofset-derived details.</p>
+          </div>
+          <div class="status-row">
+            <p><span class="mono status-chip status-chip-muted"><span class="status-dot"></span>Rejected</span></p>
+            <p>Not displayed.</p>
+          </div>
+        </div>
+        <p>
+          {
+            submissionsMap.available && submissionsMap.url ? (
+              <ExternalLink href={submissionsMap.url}>Open the Public submission map</ExternalLink>
+            ) : (
+              <span class="map-unavailable mono">Public submission map — coming soon</span>
+            )
+          }
+        </p>
+        <p>
+          You can submit as many photos as you like per day but only Qualifying Entries count for prize eligibility. <a
+            href="/compete/">See Compete</a
+          > for a complete description of the competition categories and rules.
+        </p>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    var main = document.querySelector("[data-participate]");
+    if (!main) return;
+    var nodes = Array.from(main.querySelectorAll("[data-step]"));
+    var rail = document.querySelector("[data-rail]");
+    if (!rail || !nodes.length) return;
+
+    var stepNames = [
+      "Set up Proofmode",
+      "Find a Garden",
+      "Capture",
+      "Confirm the Submission",
+      "View on the Public submission map",
+    ];
+    var segments = rail.querySelectorAll("[data-seg]");
+    var label = rail.querySelector("[data-rail-label]");
+    var next = rail.querySelector("[data-rail-next]");
+
+    function setActive(n) {
+      segments.forEach(function (seg) {
+        var segN = Number(seg.getAttribute("data-seg"));
+        seg.style.background = segN <= n ? "var(--accent-solid)" : "var(--border-2)";
+      });
+      var pad = n < 10 ? "0" + n : String(n);
+      if (label) label.textContent = "Step " + pad + " of 05 · " + stepNames[n - 1];
+      if (next) {
+        if (n < 5) {
+          next.hidden = false;
+          next.textContent = "Next: " + stepNames[n] + " →";
+          next.setAttribute("href", "#step-" + (n + 1));
+        } else {
+          next.hidden = false;
+          next.textContent = "Back to top ↑";
+          next.setAttribute("href", "#main");
+        }
+      }
+    }
+
+    setActive(1);
+
+    if (typeof IntersectionObserver === "undefined") return;
+
+    // A callback's `entries` only lists targets whose intersection state
+    // just changed — not every currently-intersecting target. Track the
+    // running set ourselves so "topmost intersecting" stays correct when
+    // one section stops intersecting in the same tick another (already
+    // intersecting, unchanged) section should take over.
+    var intersecting = new Map();
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          intersecting.set(entry.target, entry);
+        });
+        var best = null;
+        intersecting.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          if (!best || entry.boundingClientRect.top < best.boundingClientRect.top) best = entry;
+        });
+        if (!best) return;
+        var n = Number(best.target.getAttribute("data-step"));
+        if (n) setActive(n);
+      },
+      { rootMargin: "-150px 0px -55% 0px", threshold: 0 },
+    );
+    nodes.forEach(function (node) {
+      observer.observe(node);
+    });
+  })();
+</script>
+
+<style>
+  main#main[data-participate] {
+    max-width: 1760px;
+    padding: 0;
+  }
+
+  .title-block {
+    padding: 62px 48px 48px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .title-eyebrow {
+    color: var(--accent);
+    margin: 0 0 20px;
+  }
+
+  .title-h1 {
+    font-size: clamp(2.5rem, 1.9rem + 3vw, 3.75rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    margin: 0 0 20px;
+    max-width: 22ch;
+  }
+
+  .title-lead {
+    font-size: clamp(1.125rem, 1.038rem + 0.4348vw, 1.375rem);
+    line-height: 1.55;
+    color: var(--text-2);
+    max-width: 56ch;
+    margin: 0;
+  }
+
+  /* ---------- Progress rail ---------- */
+  .rail {
+    position: sticky;
+    top: 72px;
+    z-index: 15;
+    padding: 14px 48px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-2);
+  }
+
+  .rail-segments {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+
+  .rail-segments .seg {
+    height: 4px;
+    background: var(--border-2);
+  }
+
+  .rail-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .rail-active {
+    color: var(--accent);
+  }
+
+  .rail-next {
+    letter-spacing: 0.06em;
+  }
+
+  /* ---------- Notice slot (full-bleed within the frame) ---------- */
+  .notice-slot :global(.notice) {
+    padding-inline: 48px;
+  }
+
+  /* ---------- Step rows ---------- */
+  .row {
+    display: grid;
+    grid-template-columns: 208px 1fr;
+    gap: 40px;
+    padding: 44px 48px 46px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .row-last {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .row-label {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .row h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 16px;
+  }
+
+  .row p {
+    margin: 0 0 16px;
+    color: var(--text-2);
+    max-width: 74ch;
+    line-height: 1.65;
+  }
+
+  .row p:last-child {
+    margin-bottom: 0;
+  }
+
+  .sub-block {
+    margin: 28px 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .sub-block:first-of-type {
+    margin-top: 20px;
+  }
+
+  .sub-block-label {
+    color: var(--accent);
+    margin: 0 0 12px;
+  }
+
+  .install-links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+    max-width: 78rem;
+  }
+
+  /* The `<a>` is rendered inside ExternalLink.astro, so it never carries this
+     page's scope attribute — these have to be :global to match at all. */
+  .install-links :global(.install-link) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 15px 16px;
+    border: 1px solid var(--border-2);
+    background: var(--surface);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9375rem;
+  }
+
+  .install-links :global(.install-link:hover),
+  .install-links :global(.install-link:focus-visible) {
+    border-color: var(--accent-solid);
+    color: var(--text);
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-2);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    color: var(--text-3);
+  }
+
+  .chip-ok-outline {
+    border-color: color-mix(in srgb, var(--ok) 45%, var(--border-2));
+    color: var(--ok);
+  }
+
+  .chip-warn-outline {
+    border-color: color-mix(in srgb, var(--warn) 45%, var(--border-2));
+    color: var(--warn);
+  }
+
+  .permissions-table {
+    border: 1px solid var(--border-2);
+    max-width: 78rem;
+    margin-bottom: 16px;
+  }
+
+  .permissions-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .permissions-row:last-child {
+    border-bottom: 0;
+  }
+
+  .permissions-row p {
+    margin: 0;
+    padding: 15px 20px;
+  }
+
+  .permissions-row p:first-child {
+    color: var(--text);
+    letter-spacing: 0.06em;
+  }
+
+  .permissions-row p:last-child {
+    border-left: 1px solid var(--rule);
+    font-size: 0.9375rem;
+  }
+
+  .status-table {
+    border: 1px solid var(--border-2);
+    max-width: 78rem;
+    margin-bottom: 16px;
+  }
+
+  .status-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .status-row:last-child {
+    border-bottom: 0;
+  }
+
+  .status-row-head {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-2);
+  }
+
+  .status-row-head p {
+    color: var(--text-3);
+  }
+
+  .status-row p {
+    margin: 0;
+    padding: 15px 20px;
+  }
+
+  .status-row p:last-child {
+    border-left: 1px solid var(--rule);
+    font-size: 0.9375rem;
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 4px 9px;
+  }
+
+  .status-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .status-chip-warn {
+    background: var(--warn-soft);
+    color: var(--warn);
+  }
+
+  .status-chip-ok {
+    background: var(--ok-soft);
+    color: var(--ok);
+  }
+
+  .status-chip-muted {
+    background: var(--accent-soft);
+    color: var(--text-3);
+  }
+
+  .map-unavailable {
+    color: var(--text-4);
+  }
+
+  @media (max-width: 900px) {
+    .rail {
+      padding: 14px 18px 16px;
+    }
+
+    .rail-status {
+      gap: 12px;
+    }
+
+    .title-block {
+      padding: 30px 18px 26px;
+    }
+
+    .title-h1 {
+      font-size: clamp(2.25rem, 1.95rem + 1.6vw, 2.875rem);
+    }
+
+    .title-lead {
+      font-size: 1.0625rem;
+    }
+
+    .notice-slot :global(.notice) {
+      padding-inline: 18px;
+    }
+
+    .row {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 28px 18px;
+    }
+
+    .row-label {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .row h2 {
+      font-size: 1.625rem;
+    }
+
+    .install-links {
+      grid-template-columns: 1fr;
+    }
+
+    .install-links :global(.install-link) {
+      min-height: 52px;
+    }
+
+    .chip {
+      min-height: 44px;
+    }
+
+    .permissions-row,
+    .status-row {
+      grid-template-columns: 1fr;
+    }
+
+    .permissions-row p:last-child,
+    .status-row p:last-child {
+      border-left: 0;
+      padding-top: 0;
+    }
+  }
+</style>

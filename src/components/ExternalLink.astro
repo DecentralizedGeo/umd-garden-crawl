@@ -1,0 +1,21 @@
+---
+interface Props {
+  href: string;
+  class?: string;
+  style?: string;
+}
+
+const { href, class: className, style } = Astro.props;
+---
+
+<a class={className} href={href} style={style} target="_blank" rel="noopener noreferrer">
+  <slot /><span class="mark" aria-hidden="true">↗</span>
+  <span class="visually-hidden">(opens in a new tab, external site)</span>
+</a>
+
+<style>
+  .mark {
+    color: currentColor;
+    margin-inline-start: 0.2em;
+  }
+</style>

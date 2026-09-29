@@ -1,0 +1,1310 @@
+---
+import { getCollection } from "astro:content";
+import ExternalLink from "../components/ExternalLink.astro";
+import PartnersBanner from "../components/PartnersBanner.astro";
+import Provisional from "../components/Provisional.astro";
+import SpecRow from "../components/SpecRow.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import attestations from "../data/home-attestations.json";
+import {
+  attestationUidUrl,
+  formatCaptureTime,
+  formatCoordinates,
+  proofCheckUrl,
+  proofsetCidUrl,
+  truncateMiddle,
+} from "../lib/attestation-display";
+import { sortCategoriesByOrder } from "../lib/categories";
+import { splitProvisional } from "../lib/provisional";
+import { resolveSubmissionsMapUrl, siteConfig } from "../lib/site-config";
+import { config } from "astro:schema";
+
+const submissionsMap = resolveSubmissionsMapUrl();
+const categories = sortCategoriesByOrder(await getCollection("categories"));
+
+// Glass-to-glass verification stages. Process (the chain from shutter to
+// checker), not the participant walkthrough — see Delta 14.
+const stages = [
+  {
+    n: 1,
+    icon: "M4 7h16v13H4zM12 10.5a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8ZM9 7l1.4-2.4h3.2L15 7",
+    label: "01 · Capture glass",
+    name: "Capture",
+    detailLabel: "Stage 01 · The capture glass",
+    title: "Hardware-level attestation",
+    body: "The pipeline begins at the lens. The moment light hits the sensor, Proofmode builds a cryptographic snapshot of the physical moment — binding the raw file to the sensor readings around it, and signing the whole bundle with a key held on the device.",
+    points: [
+      "Raw pixels bound to sensor telemetry, not attached afterwards.",
+      "Location, hardware timestamp, and ambient conditions travel with the file.",
+      "Signed locally, so the proof never depends on our servers.",
+      "Proofmode is open source — the process can be audited.",
+    ],
+  },
+  {
+    n: 2,
+    icon: "M12 16V4M7.5 8.5 12 4l4.5 4.5M4 15v4.5h16V15",
+    label: "02 · Storage layer",
+    name: "Upload",
+    detailLabel: "Stage 02 · The storage layer",
+    title: "Content-addressable integrity",
+    body: "The signed bundle is pushed to IPFS, which hashes it into a permanent Content Identifier. The file stops being a fragile name on somebody’s server and becomes a deterministic mathematical value.",
+    points: [
+      "The CID is derived from the content itself.",
+      "Modify a single byte and the link breaks, visibly.",
+      "Stored across nodes rather than one server we control.",
+      "Anyone can fetch the same bytes from any gateway.",
+    ],
+  },
+  {
+    n: 3,
+    icon: "M3.5 9.5h5v5h-5zM15.5 9.5h5v5h-5zM8.5 12h7M6 9.5V6.5h12v3M6 14.5v3h12v-3",
+    label: "03 · Ledger anchor",
+    name: "Attest",
+    detailLabel: "Stage 03 · The ledger anchor",
+    title: "Time and state immutability",
+    body: "A smart contract anchors the CID and the signing key onto the blockchain. It works as a decentralized notary: an unalterable record that this media existed in exactly this state at exactly this moment.",
+    points: [
+      "Writes the CID, the Wallet address, and a timestamp.",
+      "Establishes when the capture existed, not just that it does.",
+      "Prevents retroactive alteration or backdating.",
+      "The receipt is public and independently readable.",
+    ],
+  },
+  {
+    n: 4,
+    icon: "M2.5 12S6.4 5.5 12 5.5 21.5 12 21.5 12 17.6 18.5 12 18.5 2.5 12 2.5 12Z",
+    iconCircle: true,
+    label: "04 · Viewer glass",
+    name: "Verify",
+    detailLabel: "Stage 04 · The viewer glass",
+    title: "Independent verification",
+    body: "The pipeline ends at somebody else’s screen. Rather than taking a platform’s word for it, a verification client reads the ledger, pulls the file from IPFS, and re-checks the whole chain — closing the loop from the capture glass to the viewing glass.",
+    points: [
+      "Confirms the file hashes match the anchored CID.",
+      "Confirms the C2PA manifest is valid.",
+      "Confirms the ledger receipt matches the asset’s history.",
+      "The published Attestation and media can be checked without this website.",
+    ],
+  },
+];
+
+const DEFAULT_OPEN_STAGE = 4; // Verify
+
+// Illustrative attestation uid for the Attest stage's sample box. Truncated
+// through the same helper the carousel uses, so it keeps the documented
+// 8 head / 6 tail uid slice even if this sample value is swapped out.
+const SAMPLE_ATTESTATION_UID = "0x9e3f2b7c41d8a06e5fb93cc27ae14d8203f6b95e7cd0184af62b3e90d17c8028";
+const sampleAttestationUid = truncateMiddle(SAMPLE_ATTESTATION_UID, 8, 6);
+
+// Same fix, same reason, for the Attest stage's truncated cid reference: it
+// was hand-sliced 7/5 instead of the documented 10 head / 6 tail for CIDs.
+const SAMPLE_ATTESTATION_CID = "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi";
+const sampleAttestationCid = truncateMiddle(SAMPLE_ATTESTATION_CID, 10, 6);
+---
+
+<BaseLayout home title={siteConfig.eventTitle} description="Real Places. Real moments. Verified.">
+  <main id="main">
+    <!-- Hero: grid-bg claim + carousel. One template — CSS alone moves the
+         carousel from the hero's right column (wide) to its own section
+         right after the hero (narrow). No copy fork either side. -->
+    <div class="hero-wrap grid-bg">
+      <div class="hero-content">
+        <p class="mono hero-eyebrow">UMD Campus Event · {siteConfig.eventDates}</p>
+        <h1 class="hero-title">Real Places. Real moments.<br /><span class="accent">Verified.</span></h1>
+        <p class="hero-lead">
+          Get outside and experience UMD’s Arboretum and Botanical Gardens for yourself. Compete for an opportunity to win prizes.
+          Photograph the places, plants, wildlife, and moments you encounter with Proofmode, then contribute a trusted record of
+          what was seen, where it happened, and when.
+        </p>
+        <div class="hero-cta-row">
+          <a class="hero-cta mono" href="/compete/">
+            Compete for prizes
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
+              <path d="M2 7h10M8 3l4 4-4 4"></path>
+            </svg>
+          </a>
+          {
+            submissionsMap.available && submissionsMap.url ? (
+              <ExternalLink class="hero-cta-ghost mono" href={submissionsMap.url}>
+                View submissions
+              </ExternalLink>
+            ) : (
+              <span class="hero-coming-soon mono">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 7.5v5l3 2" />
+                </svg>
+                Public submission map — coming soon
+              </span>
+            )
+          }
+        </div>
+      </div>
+
+      <div class="hero-carousel">
+        <div class="carousel" data-carousel>
+          <div class="car-head">
+            <span class="mono" style="color: var(--text-3)">Verified submissions</span>
+            <div class="car-nav">
+              <span class="data car-counter" data-car-counter style="color: var(--text-4)">1 / {attestations.length}</span>
+              <button class="car-btn" type="button" data-car-prev aria-label="Previous submission">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  ><path d="M15 5l-7 7 7 7"></path></svg
+                >
+              </button>
+              <button class="car-btn" type="button" data-car-next aria-label="Next submission">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  ><path d="M9 5l7 7-7 7"></path></svg
+                >
+              </button>
+            </div>
+          </div>
+
+          <div class="car-stage">
+            {
+              attestations.map((record, i) => (
+                <img
+                  src={`/home-attestations/${record.image}`}
+                  alt={`Capture from ${record.gardenName}`}
+                  data-car-image
+                  data-index={i}
+                  hidden={i !== 0}
+                />
+              ))
+            }
+          </div>
+
+          <div class="car-dots" data-car-dots role="group" aria-label="Choose a verified submission">
+            {
+              attestations.map((record, i) => (
+                <button
+                  class="dot"
+                  type="button"
+                  data-car-dot
+                  data-index={i}
+                  aria-current={i === 0 ? "true" : undefined}
+                  aria-label={`Show submission ${i + 1} — ${record.gardenName}`}
+                >
+                  <span />
+                </button>
+              ))
+            }
+          </div>
+
+          <div class="car-data-stack">
+            {
+              attestations.map((record, i) => (
+                <div
+                  class="car-data"
+                  data-car-data
+                  data-index={i}
+                  aria-hidden={i === 0 ? "false" : "true"}
+                  aria-live={i === 0 ? "polite" : undefined}
+                  inert={i !== 0}
+                >
+                  <div class="car-row">
+                    <span class="data" style="color: var(--text-3)">
+                      garden
+                    </span>
+                    <span class="data" style="color: var(--text); text-align: right">
+                      {record.gardenName}
+                    </span>
+                  </div>
+                  <div class="car-row">
+                    <span class="data" style="color: var(--text-3)">
+                      time
+                    </span>
+                    <span class="data" style="color: var(--text)">
+                      {formatCaptureTime(record.eventTimestamp)}
+                    </span>
+                  </div>
+                  <div class="car-row">
+                    <span class="data" style="color: var(--text-3)">
+                      coordinates
+                    </span>
+                    <span class="data" style="color: var(--accent)">
+                      {formatCoordinates(record.latitude, record.longitude)}
+                    </span>
+                  </div>
+                  <div class="car-row">
+                    <span class="data" style="color: var(--text-3)">
+                      wallet
+                    </span>
+                    <span class="data" style="color: var(--accent)">
+                      {truncateMiddle(record.attester, 6, 4)}
+                    </span>
+                  </div>
+                  <div class="car-row">
+                    <span class="data" style="color: var(--text-3)">
+                      proofset_cid
+                    </span>
+                    <ExternalLink class="data" href={proofsetCidUrl(record.proofsetCid)} style="color: var(--accent)">
+                      {truncateMiddle(record.proofsetCid, 10, 6)}
+                    </ExternalLink>
+                  </div>
+                  <div class="car-row">
+                    <span class="data" style="color: var(--text-3)">
+                      uid
+                    </span>
+                    <ExternalLink class="data" href={attestationUidUrl(record.uid)} style="color: var(--accent)">
+                      {truncateMiddle(record.uid, 8, 6)}
+                    </ExternalLink>
+                  </div>
+                  <div class="car-foot">
+                    <span class="mono chip-ok">
+                      <span class="chip-dot" aria-hidden="true" />
+                      Verified
+                    </span>
+                    <ExternalLink class="mono" href={proofCheckUrl(record.proofsetCid)}>
+                      Verify on ProofCheck
+                    </ExternalLink>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event Overview: What is this event and why participate -->
+    <section class="wrap-section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="mono section-eyebrow">Event Overview</p>
+            <h2 class="section-title">Why participate</h2>
+          </div>
+          <a class="mono section-link" href="/participate/">Full instructions →</a>
+        </div>
+        <p class="section-lead">
+          The {siteConfig.eventTitle}, is an invitation to step outside, look more closely, and share the places and moments that make UMD’s
+          campus feel alive. From a favorite garden path to an unexpected bloom or a wildlife encounter, every Submission starts
+          with something you experienced yourself. Take part for a chance to win gift-card prizes while helping build a trusted
+          record of UMD’s living landscape. <em>The event runs {siteConfig.eventDates}</em>
+        </p>
+        <p class="section-lead">
+          Photos are captured with Proofmode and include verifiable information about where and when they were taken. Together,
+          these authentic observations create a trusted, community-built record of the Arboretum and Botanical Gardens—one based
+          on real experiences, not generated or fabricated ones.
+        </p>
+      </div>
+    </section>
+
+    <!-- Compete: index rows sourced from the Categories collection. -->
+    <section class="wrap-section index-section">
+      <div class="section-head index-head">
+        <div>
+          <p class="mono section-eyebrow">Compete</p>
+          <h2 class="section-title">Participate your way</h2>
+        </div>
+        <a class="mono section-link" href="/compete/">Categories &amp; rules →</a>
+      </div>
+      <div class="index-lead-wrap">
+        <p class="section-lead">
+          Explore on your own terms from {siteConfig.eventDates} and compete for gift-card prizes. Win a $100 gift card in the Garden Crawl Challenge, Daily Visitor, or
+          Explorer category, or be one of three participants selected to each receive a $50 gift card for Nature in Focus.
+        </p>
+      </div>
+      <div class="index-rows">
+        {
+          categories.map((category, i) => (
+            <div class="idx-row">
+              <span class="mono idx-num">{String(i + 1).padStart(2, "0")}</span>
+              <div class="idx-body">
+                <h3 class="idx-title">{category.data.name}</h3>
+                <p class="idx-summary">
+                  {splitProvisional(category.data.summary).map((seg) =>
+                    seg.provisional ? <Provisional>{seg.text}</Provisional> : seg.text,
+                  )}
+                </p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Glass-to-glass: four stage tabs, native radio group joins the panel
+         (no JS). Default open: Verify. -->
+    <section class="wrap-section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="mono section-eyebrow">How it works</p>
+            <h2 class="section-title">Glass-to-glass verification</h2>
+          </div>
+          <a class="mono section-link" href="/ecosystem/">How a Capture is checked →</a>
+        </div>
+        <p class="section-lead">
+          From the instant light hits the camera sensor to the instant a recipient checks the media for themselves — one unbroken
+          chain, with no point where you have to take our word for it.
+        </p>
+
+        <fieldset class="stagepicker">
+          <legend class="visually-hidden">Verification stage</legend>
+          {
+            stages.map((stage) => (
+              <input
+                type="radio"
+                name="stage"
+                id={`stage-radio-${stage.n}`}
+                class="stage-radio visually-hidden"
+                checked={stage.n === DEFAULT_OPEN_STAGE}
+              />
+            ))
+          }
+
+          <div class="stagepicker-body">
+            {
+              stages.map((stage, i) => (
+                <>
+                  <label class="stage-tab" for={`stage-radio-${stage.n}`} data-stage={stage.n}>
+                    <span class="stage-tab-head">
+                      <span class="mono stage-tab-label">{stage.label}</span>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="stage-tab-icon" stroke-width="1.5">
+                        {stage.iconCircle ? (
+                          <>
+                            <path d={stage.icon} />
+                            <circle cx="12" cy="12" r="2.8" />
+                          </>
+                        ) : (
+                          <path d={stage.icon} />
+                        )}
+                      </svg>
+                    </span>
+                    <span class="stage-tab-name">{stage.name}</span>
+                  </label>
+                  {i < stages.length - 1 && (
+                    <span class="stage-arrow" aria-hidden="true">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--border-2)" stroke-width="2">
+                        <path d="M4 12h14M13 6l6 6-6 6" />
+                      </svg>
+                    </span>
+                  )}
+                </>
+              ))
+            }
+
+            <div class="tab-rule" aria-hidden="true">
+              {
+                stages.map((stage, i) => (
+                  <>
+                    <span class="seg" data-seg={stage.n} />
+                    {i < stages.length - 1 && <span class="seg gap" />}
+                  </>
+                ))
+              }
+            </div>
+
+            {
+              stages.map((stage) => (
+                <div class="panel-inner" data-panel={stage.n}>
+                  {/* One wrapper so `.panel-inner`'s two grid columns get exactly
+                      two children: prose on the left, the data box on the right.
+                      Without it, auto-placement fills row-major and scatters the
+                      eyebrow, title, body and checklist across both columns. */}
+                  <div class="panel-text">
+                    <p class="mono panel-eyebrow">{stage.detailLabel}</p>
+                    <h3 class="panel-title">{stage.title}</h3>
+                    <p class="panel-body">{stage.body}</p>
+                    <div class="points">
+                      {stage.points.map((point) => (
+                        <div class="point">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8">
+                            <path d="M5 12.5l4.5 4.5L19 7" />
+                          </svg>
+                          <span>{point}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div class="spec">
+                    {stage.n === 1 && (
+                      <>
+                        <div class="spec-head">
+                          <span class="mono" style="color: var(--text-3)">
+                            Proof bundle · sample
+                          </span>
+                          <span class="mono" style="color: var(--text-4)">
+                            on device
+                          </span>
+                        </div>
+                        <SpecRow label="coordinates" value="38.98692, -76.94261" tone="accent" />
+                        <SpecRow label="captured" value="2026-10-07T14:22:08-04" />
+                        <SpecRow label="C2PA manifest" value="Valid" tone="accent" />
+                        <div class="spec-foot">
+                          <p>Signed on the phone before the file is ever written — not on a server afterwards.</p>
+                        </div>
+                      </>
+                    )}
+                    {stage.n === 2 && (
+                      <>
+                        <div class="spec-head">
+                          <span class="mono" style="color: var(--text-3)">
+                            Content identifier
+                          </span>
+                          <span class="mono" style="color: var(--text-4)">
+                            IPFS
+                          </span>
+                        </div>
+                        <div class="spec-cid">
+                          <div class="data" style="color: var(--accent)">
+                            bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi
+                          </div>
+                        </div>
+                        <SpecRow label="hash" value="SHA-256 multihash" />
+                        <div class="spec-foot">
+                          <p>
+                            Change one pixel and this string changes completely. The name <em>is</em> the checksum.
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {stage.n === 3 && (
+                      <>
+                        <div class="spec-head">
+                          <span class="mono" style="color: var(--text-3)">
+                            Attestation · sample
+                          </span>
+                          <span class="mono" style="color: var(--text-4)">
+                            on chain
+                          </span>
+                        </div>
+                        <SpecRow label="cid" value={sampleAttestationCid} tone="accent" />
+                        <SpecRow label="wallet address" value="0x7c4a…9f21" tone="accent" />
+                        <SpecRow label="timestamp" value="1791469328" />
+                        <SpecRow label="network" value="sepolia" />
+                        <SpecRow label="uid" value={sampleAttestationUid} tone="accent" />
+                        {/* Coordinates are part of the on-chain claim: the event stores location via the location protocol spec. */}
+                        <SpecRow label="coordinates" value="38.98692, -76.94261" />
+                        <div class="spec-foot">
+                          <p>A time-anchor. The bundle provably existed in this exact state at this block — no backdating.</p>
+                        </div>
+                      </>
+                    )}
+                    {stage.n === 4 && (
+                      <>
+                        <div class="spec-head">
+                          <span class="mono" style="color: var(--text-3)">
+                            Verification result
+                          </span>
+                          <span class="mono chip-ok">
+                            <span class="chip-dot" aria-hidden="true" />
+                            All checks pass
+                          </span>
+                        </div>
+                        <SpecRow label="Media file matches CID" check />
+                        <SpecRow label="C2PA manifest valid" check />
+                        <SpecRow label="ledger receipt matches" check />
+                        <SpecRow label="wallet address" value="0x7c4a…9f21" tone="accent" />
+                        <div class="spec-foot">
+                          <p>
+                            Anyone can run this. No account, and no trust in us required. <a href="/privacy/">What is public →</a>
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </fieldset>
+      </div>
+    </section>
+  </main>
+
+  <PartnersBanner />
+
+  <!-- The only place Home discusses privacy and legal caveats. -->
+  <section class="closing">
+    <h2 class="closing-title">Decentralized Verification</h2>
+    <div class="closing-body">
+      <p>
+        Every eligible entry is a cryptographically verifiable submission stored on the blockchain. It includes evidence of when
+        and where it was captured, keeping the event transparent and fair. All photos are stored on decentralized networks to make
+        the submission process independently verifiable.
+      </p>
+      <p>
+        These technologies do not make a Submission permanently available or completely anonymous. The Public submission map
+        displays the wallet address associated with an Attestation and may display capture coordinates and Proofset metadata.
+        Media may be stored on IPFS and may be replicated by other nodes.
+      </p>
+      <p><a href="/privacy/">Read the privacy and storage information</a> before you submit.</p>
+      <a class="mono closing-link" href="/help/#faq">Read the FAQ →</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { bindHomeCarousels } from "../lib/home-carousel";
+  bindHomeCarousels();
+</script>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 560px;
+    gap: 0;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-content {
+    padding: 84px 48px 78px;
+  }
+
+  .hero-eyebrow {
+    color: var(--accent);
+    margin: 0 0 26px;
+  }
+
+  .hero-title {
+    font-size: clamp(2.75rem, 1.8rem + 4.6vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin: 0 0 24px;
+    max-width: 20ch;
+  }
+
+  .hero-title .accent {
+    color: var(--accent);
+  }
+
+  .hero-lead {
+    font-size: clamp(1.125rem, 1.038rem + 0.4348vw, 1.375rem);
+    line-height: 1.55;
+    color: var(--text-2);
+    max-width: 54ch;
+    margin: 0 0 38px;
+  }
+
+  .hero-cta-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 24px;
+    background: var(--accent-solid);
+    color: var(--accent-on);
+    text-decoration: none;
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .hero-cta:hover,
+  .hero-cta:focus-visible {
+    color: var(--accent-on);
+    opacity: 0.88;
+  }
+
+  /* The `<a>` is rendered inside ExternalLink.astro, so it never carries this
+     page's scope attribute — these have to be :global to match at all. */
+  .hero-cta-row :global(.hero-cta-ghost) {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 15px 22px;
+    border: 1px solid var(--border-2);
+    color: var(--text-3);
+    text-decoration: none;
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+    font-family: var(--font-mono);
+  }
+
+  .hero-cta-row :global(.hero-cta-ghost:hover),
+  .hero-cta-row :global(.hero-cta-ghost:focus-visible) {
+    color: var(--accent);
+  }
+
+  .hero-coming-soon {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 15px 22px;
+    border: 1px solid var(--border-2);
+    color: var(--text-3);
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+  }
+
+  .hero-carousel {
+    align-self: stretch;
+    padding: 84px 48px 78px;
+    border-left: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  /* ---------- Carousel ---------- */
+  .carousel {
+    max-width: 400px;
+    border: 1px solid var(--border-2);
+    background: var(--surface);
+  }
+
+  .car-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 10px 8px 14px;
+    border-bottom: 1px solid var(--border-2);
+  }
+
+  .car-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .car-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--border-2);
+    color: var(--text-3);
+    cursor: pointer;
+  }
+
+  .car-btn:hover {
+    border-color: var(--accent-solid);
+    color: var(--accent);
+  }
+
+  .car-stage {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    max-height: 300px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .car-stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .car-stage img[hidden] {
+    display: none;
+  }
+
+  .car-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 0 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .dot {
+    width: 26px;
+    height: 20px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dot span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: var(--border-2);
+  }
+
+  .dot[aria-current="true"] span {
+    background: var(--accent);
+  }
+
+  .car-data-stack {
+    display: grid;
+  }
+
+  .car-data-stack > .car-data {
+    grid-area: 1 / 1;
+  }
+
+  .car-data[aria-hidden="true"] {
+    visibility: hidden;
+  }
+
+  .car-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .car-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+  }
+
+  .chip-ok {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 9px;
+    background: var(--ok-soft);
+    color: var(--ok);
+  }
+
+  .chip-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--ok);
+  }
+
+  /* ---------- Section scaffolding ---------- */
+  .wrap {
+    max-width: 1600px;
+    margin-inline: auto;
+  }
+
+  .wrap-section {
+    padding: 64px 48px 68px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 16px;
+  }
+
+  .section-eyebrow {
+    color: var(--accent);
+    margin: 0 0 12px;
+  }
+
+  .section-title {
+    font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0;
+  }
+
+  .section-link {
+    letter-spacing: 0.07em;
+    flex-shrink: 0;
+  }
+
+  .section-lead {
+    margin: 0 0 34px;
+    color: var(--text-2);
+    max-width: 74ch;
+    line-height: 1.6;
+  }
+
+  /* ---------- Stage picker (glass-to-glass) ---------- */
+  .stagepicker {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .stagepicker-body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+  }
+
+  .stage-tab {
+    flex: 1 1 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 122px;
+    padding: 20px 22px 22px;
+    border: 1px solid var(--border-2);
+    background: var(--bg);
+    cursor: pointer;
+  }
+
+  .stage-tab-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .stage-tab-label {
+    color: var(--text-4);
+  }
+
+  .stage-tab-icon {
+    stroke: var(--text-3);
+  }
+
+  .stage-tab-name {
+    font-size: 1.1875rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--text);
+  }
+
+  #stage-radio-1:focus-visible ~ .stagepicker-body [data-stage="1"],
+  #stage-radio-2:focus-visible ~ .stagepicker-body [data-stage="2"],
+  #stage-radio-3:focus-visible ~ .stagepicker-body [data-stage="3"],
+  #stage-radio-4:focus-visible ~ .stagepicker-body [data-stage="4"] {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  #stage-radio-1:checked ~ .stagepicker-body [data-stage="1"],
+  #stage-radio-2:checked ~ .stagepicker-body [data-stage="2"],
+  #stage-radio-3:checked ~ .stagepicker-body [data-stage="3"],
+  #stage-radio-4:checked ~ .stagepicker-body [data-stage="4"] {
+    border-color: var(--accent-solid);
+    border-bottom-width: 0;
+    background: var(--surface);
+  }
+
+  #stage-radio-1:checked ~ .stagepicker-body [data-stage="1"] .stage-tab-label,
+  #stage-radio-2:checked ~ .stagepicker-body [data-stage="2"] .stage-tab-label,
+  #stage-radio-3:checked ~ .stagepicker-body [data-stage="3"] .stage-tab-label,
+  #stage-radio-4:checked ~ .stagepicker-body [data-stage="4"] .stage-tab-label,
+  #stage-radio-1:checked ~ .stagepicker-body [data-stage="1"] .stage-tab-name,
+  #stage-radio-2:checked ~ .stagepicker-body [data-stage="2"] .stage-tab-name,
+  #stage-radio-3:checked ~ .stagepicker-body [data-stage="3"] .stage-tab-name,
+  #stage-radio-4:checked ~ .stagepicker-body [data-stage="4"] .stage-tab-name {
+    color: var(--accent);
+  }
+
+  #stage-radio-1:checked ~ .stagepicker-body [data-stage="1"] .stage-tab-icon,
+  #stage-radio-2:checked ~ .stagepicker-body [data-stage="2"] .stage-tab-icon,
+  #stage-radio-3:checked ~ .stagepicker-body [data-stage="3"] .stage-tab-icon,
+  #stage-radio-4:checked ~ .stagepicker-body [data-stage="4"] .stage-tab-icon {
+    stroke: var(--accent);
+  }
+
+  .stage-arrow {
+    flex: 0 0 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tab-rule {
+    flex: 0 0 100%;
+    display: flex;
+    height: 2px;
+    background: var(--surface);
+  }
+
+  .tab-rule .seg {
+    flex: 1 1 0;
+    background: var(--accent-solid);
+  }
+
+  .tab-rule .gap {
+    flex: 0 0 44px;
+    background: var(--accent-solid);
+  }
+
+  #stage-radio-1:checked ~ .stagepicker-body .tab-rule .seg[data-seg="1"],
+  #stage-radio-2:checked ~ .stagepicker-body .tab-rule .seg[data-seg="2"],
+  #stage-radio-3:checked ~ .stagepicker-body .tab-rule .seg[data-seg="3"],
+  #stage-radio-4:checked ~ .stagepicker-body .tab-rule .seg[data-seg="4"] {
+    background: transparent;
+  }
+
+  .panel-inner {
+    display: none;
+    flex: 0 0 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--accent-solid);
+    border-top: 0;
+    background: var(--surface);
+    padding: 32px 32px 34px;
+  }
+
+  #stage-radio-1:checked ~ .stagepicker-body .panel-inner[data-panel="1"],
+  #stage-radio-2:checked ~ .stagepicker-body .panel-inner[data-panel="2"],
+  #stage-radio-3:checked ~ .stagepicker-body .panel-inner[data-panel="3"],
+  #stage-radio-4:checked ~ .stagepicker-body .panel-inner[data-panel="4"] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 520px;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .panel-eyebrow {
+    color: var(--accent);
+    margin: 0 0 12px;
+  }
+
+  .panel-title {
+    font-size: 1.625rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 14px;
+  }
+
+  .panel-body {
+    margin: 0 0 26px;
+    color: var(--text-2);
+    max-width: 68ch;
+    line-height: 1.65;
+  }
+
+  .points {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 40px;
+    max-width: 68ch;
+  }
+
+  .point {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 11px;
+    align-items: start;
+  }
+
+  .point span {
+    color: var(--text-3);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  /* A bounded card, not a run of loose rows: the tinted head/foot bookend
+     the data body so the box reads as its own object on the panel. */
+  .spec {
+    align-self: start;
+    overflow: hidden;
+    border: 1px solid var(--border-2);
+    background: var(--bg);
+  }
+
+  .spec-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-2);
+    background: var(--accent-soft);
+  }
+
+  /* `.spec-row` styling lives in SpecRow.astro, which renders the element. */
+
+  .spec-cid {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--rule);
+    word-break: break-all;
+  }
+
+  .spec-foot {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-2);
+    background: var(--accent-soft);
+  }
+
+  .spec-foot p {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--text-3);
+  }
+
+  /* ---------- Compete index rows ---------- */
+  .index-section {
+    padding: 76px 0 0;
+  }
+
+  .index-head {
+    padding: 0 48px 26px;
+  }
+
+  .index-lead-wrap {
+    padding: 0 48px;
+  }
+
+  .index-rows {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--border-2);
+  }
+
+  .idx-row {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 32px;
+    align-items: baseline;
+    padding: 30px 48px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .idx-row:last-child {
+    border-bottom: 0;
+  }
+
+  .idx-num {
+    color: var(--text-4);
+  }
+
+  .idx-body {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 32px;
+    align-items: baseline;
+  }
+
+  .idx-title {
+    font-size: 1.375rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.015em;
+  }
+
+  .idx-summary {
+    margin: 0;
+    color: var(--text-2);
+    max-width: 68ch;
+  }
+
+  /* ---------- Closing ---------- */
+  .closing {
+    padding: 76px 48px 84px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+
+  .closing-title {
+    font-size: clamp(1.625rem, 1.35rem + 1.3vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0;
+    max-width: 24ch;
+  }
+
+  .closing-body p {
+    margin: 0 0 16px;
+    color: var(--text-2);
+    line-height: 1.65;
+  }
+
+  .closing-link {
+    display: inline-block;
+    margin-top: 6px;
+    letter-spacing: 0.07em;
+  }
+
+  @media (max-width: 900px) {
+    .hero-wrap {
+      display: block;
+    }
+
+    .hero-content {
+      padding: 34px 18px 32px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.375rem, 2rem + 2vw, 3rem);
+    }
+
+    .hero-lead {
+      font-size: 1.0625rem;
+    }
+
+    .hero-cta-row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .hero-cta,
+    .hero-cta-row :global(.hero-cta-ghost),
+    .hero-coming-soon {
+      justify-content: center;
+      min-height: 48px;
+    }
+
+    .hero-carousel {
+      padding: 30px 18px 32px;
+      border-left: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .carousel {
+      max-width: 420px;
+      margin-inline: auto;
+    }
+
+    .wrap-section {
+      padding: 34px 18px 34px;
+    }
+
+    .section-lead {
+      margin-bottom: 22px;
+    }
+
+    .stage-tab {
+      flex: 0 0 100%;
+      min-height: 64px;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+    }
+
+    .stage-tab-head {
+      display: contents;
+    }
+
+    .stage-tab-icon {
+      order: 1;
+      flex-shrink: 0;
+    }
+
+    .stage-tab-name {
+      order: 2;
+      flex-grow: 1;
+      font-size: 1.0625rem;
+    }
+
+    .stage-tab-label {
+      order: 3;
+      flex-shrink: 0;
+    }
+
+    .stage-arrow,
+    .tab-rule {
+      display: none;
+    }
+
+    .panel-inner {
+      border: 1px solid var(--accent-solid);
+      border-top: 0;
+      padding: 18px 16px 20px;
+      background: var(--accent-soft);
+    }
+
+    #stage-radio-1:checked ~ .stagepicker-body .panel-inner[data-panel="1"],
+    #stage-radio-2:checked ~ .stagepicker-body .panel-inner[data-panel="2"],
+    #stage-radio-3:checked ~ .stagepicker-body .panel-inner[data-panel="3"],
+    #stage-radio-4:checked ~ .stagepicker-body .panel-inner[data-panel="4"] {
+      display: block;
+    }
+
+    .stage-tab[data-stage="1"] {
+      order: 1;
+    }
+    .panel-inner[data-panel="1"] {
+      order: 2;
+    }
+    .stage-tab[data-stage="2"] {
+      order: 3;
+    }
+    .panel-inner[data-panel="2"] {
+      order: 4;
+    }
+    .stage-tab[data-stage="3"] {
+      order: 5;
+    }
+    .panel-inner[data-panel="3"] {
+      order: 6;
+    }
+    .stage-tab[data-stage="4"] {
+      order: 7;
+    }
+    .panel-inner[data-panel="4"] {
+      order: 8;
+    }
+
+    .points {
+      grid-template-columns: 1fr;
+    }
+
+    /* Stacked, the desktop grid's 48px column gap no longer applies, so the
+       data box would otherwise butt straight up against the checklist. */
+    .spec {
+      margin-top: 24px;
+    }
+
+    .index-head {
+      padding: 0 18px 18px;
+    }
+
+    .index-lead-wrap {
+      padding: 0 18px;
+    }
+
+    .idx-row {
+      grid-template-columns: 34px 1fr;
+      padding: 18px;
+      gap: 12px;
+    }
+
+    .idx-body {
+      display: block;
+    }
+
+    .idx-title {
+      font-size: 1.0625rem;
+      margin-bottom: 4px;
+    }
+
+    .idx-summary {
+      font-size: 0.9375rem;
+    }
+
+    .closing {
+      grid-template-columns: 1fr;
+      padding: 34px 18px 40px;
+      gap: 18px;
+    }
+  }
+</style>

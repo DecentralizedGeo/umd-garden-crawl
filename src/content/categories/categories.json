@@ -1,0 +1,32 @@
+[
+  {
+    "id": "garden-crawl-challenge",
+    "name": "Garden Crawl Challenge",
+    "summary": "Be the first to submit a valid entry from every Garden Submission Area.",
+    "tieBreaker": "Tie-breaker: Earliest verified completion of all Garden Submission Areas.",
+    "order": 1
+  },
+  {
+    "id": "daily-visitor",
+    "name": "Daily Visitor",
+    "summary": "Build the longest Daily Visitor streak during the event.",
+    "detail": "A day counts toward your streak when you submit valid entries from at least five distinct Garden Submission Areas. Missing a day ends your streak.",
+    "tieBreaker": "Tie-breakers: Most distinct Garden Submission Areas visited during the qualifying streak, then earliest completion of the final qualifying day.",
+    "order": 2
+  },
+  {
+    "id": "explorer",
+    "name": "Explorer",
+    "summary": "Earn the most Explorer Days during the event.",
+    "detail": "You earn one Explorer Day by submitting valid photos from at least two different Garden Submission Areas on the same day. Explorer Days do not need to be consecutive.",
+    "tieBreaker": "Tie-breakers: Most distinct Garden Submission Areas visited during the event, then the highest total number of distinct Garden Submission Areas represented across all qualifying days, then earliest completion of the final Explorer Day.",
+    "order": 3
+  },
+  {
+    "id": "nature-in-focus",
+    "name": "Nature in Focus",
+    "summary": "Capture the Arboretum’s natural beauty in your most compelling photograph. Submit a photo that highlights its gardens, plants, wildlife, landscapes, or seasonal character.",
+    "detail": "We’ll select the top three photos that showcase creativity, thoughtful composition, a connection to nature, and visual impact.",
+    "order": 4
+  }
+]

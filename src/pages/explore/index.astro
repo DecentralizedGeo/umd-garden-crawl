@@ -1,0 +1,169 @@
+---
+import DocumentTitleBlock from "../../components/DocumentTitleBlock.astro";
+import ExternalLink from "../../components/ExternalLink.astro";
+import Provisional from "../../components/Provisional.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { splitProvisional } from "../../lib/provisional";
+import { resolveGardenReferenceMapUrl, resolveSubmissionsMapUrl, siteConfig } from "../../lib/site-config";
+
+const gardenReferenceMap = resolveGardenReferenceMapUrl();
+const submissionsMap = resolveSubmissionsMapUrl();
+
+const submissionAreasCopy =
+  "Each Garden has a Submission area used to decide whether a Capture’s location qualifies. Submission areas are {{still being finalized and may combine overlapping areas}} into a single Submission area per Garden.";
+---
+
+<BaseLayout
+  title={`Explore — ${siteConfig.eventTitle}`}
+  description="Official UMD campus Gardens, what a Submission is, and a link to the Public submission map."
+>
+  <main id="main" data-document>
+    <DocumentTitleBlock>
+      <Fragment slot="title">Where will you explore next?</Fragment>
+      <Fragment slot="lead">
+        <p>
+          Official Map for the {siteConfig.eventTitle} event. Use this map to explore where the official event Submissions Areas are
+          and plan your garden crawl to compete.
+        </p>
+      </Fragment>
+    </DocumentTitleBlock>
+
+    <!-- Garden reference map: full width of the page frame, edge to
+         hairline. Ignores the prose measure cap; does not break out to
+         the viewport. The coming-soon placeholder uses the same slot. -->
+    <div class="map-slot">
+      {
+        gardenReferenceMap.available && gardenReferenceMap.url ? (
+          <iframe class="garden-reference-map" src={gardenReferenceMap.url} title="Garden reference map" allowfullscreen />
+        ) : (
+          <div class="map-placeholder">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.4"
+              aria-hidden="true"
+            >
+              <path d="M12 21s6.4-6.1 6.4-11A6.4 6.4 0 0 0 5.6 10c0 4.9 6.4 11 6.4 11z" />
+              <circle cx="12" cy="10" r="2.4" />
+            </svg>
+            <p class="mono">Garden reference map — coming soon</p>
+          </div>
+        )
+      }
+    </div>
+
+    <div class="doc-body">
+      <section class="doc-section" aria-labelledby="event-submissions">
+        <h2 id="event-submissions">How Submissions qualify</h2>
+        <p>
+          To ensure the photos you capture qualify for the event, a photo must be captured within an approved Garden Submission
+          Area. Check out the map above to review each of the areas and get walking directions.
+        </p>
+      </section>
+
+      <section class="doc-section" aria-labelledby="view-submissions">
+        <h2 id="view-submissions">Every Submission is verifiable</h2>
+
+        <p>
+          Photos captured with Proofmode include signed location and capture-time information, creating a trusted record of what
+          was captured, where it happened, and when.
+        </p>
+        <p>
+          {
+            submissionsMap.available && submissionsMap.url ? (
+              <ExternalLink href={submissionsMap.url}>Open the Public submission map</ExternalLink>
+            ) : (
+              <span class="map-unavailable mono">Public submission map — coming soon</span>
+            )
+          }
+        </p>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  main#main[data-document] {
+    max-width: 1760px;
+    padding: 0;
+  }
+
+  .map-slot {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .garden-reference-map {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 22rem;
+    border: 0;
+  }
+
+  .map-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 22rem;
+    background: var(--surface);
+    color: var(--text-4);
+  }
+
+  .map-placeholder p {
+    margin: 0;
+  }
+
+  .doc-body {
+    padding: 64px 48px 84px;
+  }
+
+  .doc-section {
+    margin-top: var(--space-lg, 2rem);
+  }
+
+  .doc-section:first-child {
+    margin-top: 0;
+  }
+
+  h2 {
+    max-width: 74ch;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin: 0 0 var(--space-sm, 1rem);
+    color: var(--text);
+  }
+
+  p {
+    max-width: 74ch;
+    line-height: 1.65;
+    color: var(--text-2);
+    margin: 0 0 var(--space-sm, 1rem);
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  .map-unavailable {
+    color: var(--text-4);
+  }
+
+  @media (max-width: 900px) {
+    .garden-reference-map,
+    .map-placeholder {
+      min-height: 16rem;
+    }
+
+    .doc-body {
+      padding: 32px 18px 56px;
+    }
+  }
+</style>

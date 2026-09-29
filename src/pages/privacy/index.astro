@@ -1,0 +1,172 @@
+---
+import Callout from '../../components/Callout.astro';
+import DocumentTitleBlock from '../../components/DocumentTitleBlock.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../lib/site-config';
+---
+
+<BaseLayout
+  title={`Privacy — ${siteConfig.eventTitle}`}
+  description="What is and isn't publicly displayed, precise Capture coordinates, identifiable-people guidance, and what media removal can and cannot change."
+>
+  <main id="main" data-document>
+    <DocumentTitleBlock>
+      <Fragment slot="title">Privacy and decentralized storage</Fragment>
+      <Fragment slot="lead">
+        <p>
+          Read this page before installing Proofmode or submitting media. It is the canonical list of what the
+          Public submission map does and does not display, and the full guidance on identifiable people and
+          sensitive content.
+        </p>
+      </Fragment>
+    </DocumentTitleBlock>
+
+    <div class="doc-body">
+      <section class="doc-section" aria-labelledby="not-public">
+        <h2 id="not-public">What is not public</h2>
+        <p>The Public submission map does not display:</p>
+        <ul>
+          <li>Participant names</li>
+          <li>Phone numbers</li>
+          <li>Email addresses</li>
+          <li>Other direct personal details collected for authentication</li>
+        </ul>
+      </section>
+
+      <section class="doc-section" aria-labelledby="may-be-public">
+        <h2 id="may-be-public">What may be public</h2>
+        <p>The Public submission map may display:</p>
+        <ul>
+          <li>The full Wallet address associated with the Attestation</li>
+          <li>The Capture coordinates recorded by Proofmode</li>
+          <li>Raw Proofset metadata used in the Public submission map details pane</li>
+          <li>Media for Approved Submissions, shown as Observations</li>
+          <li>Submission and review status</li>
+        </ul>
+        <p>
+          This is pseudonymous public participation, not absolute anonymity. A Wallet address is a persistent,
+          pseudonymous public identifier. It is not a participant&rsquo;s name, but it may link multiple Submissions
+          made with the same Wallet address.
+        </p>
+      </section>
+
+      <section class="doc-section" aria-labelledby="coordinates">
+        <h2 id="coordinates">Precise Capture coordinates</h2>
+        <div class="notice-slot">
+          <Callout intent="privacy">
+            <p>
+              Precise Capture coordinates are not generalized and may be public. When a Submission is eligible for
+              Public submission map display, it is shown at the coordinates recorded at Capture time. Precision
+              depends on the device&rsquo;s GPS accuracy at that time.
+            </p>
+          </Callout>
+        </div>
+        <p>
+          Submissions outside the campus boundary are filtered from Public submission map display by the
+          event&rsquo;s backend geospatial logic.
+        </p>
+      </section>
+
+      <section class="doc-section" aria-labelledby="sensitive-content">
+        <h2 id="sensitive-content">Identifiable people and sensitive content</h2>
+        <p>
+          Avoid photographing identifiable people, children, private situations, identification documents, license
+          plates, or other sensitive information. Participants are responsible for considering the consequences of
+          submitting media to a decentralized network.
+        </p>
+        <p>Every Submission is reviewed before its media is displayed publicly.</p>
+      </section>
+
+      <section class="doc-section" aria-labelledby="decentralized-storage">
+        <h2 id="decentralized-storage">Decentralized storage</h2>
+        <div class="notice-slot">
+          <Callout intent="irreversible">
+            <p>
+              On-chain Attestations are intended to remain indefinitely. An on-chain Attestation cannot be removed
+              by unpinning associated media or hiding a Submission from the Public submission map.
+            </p>
+            <p>
+              Event media is stored on IPFS. The organizer plans to pin media on its IPFS node for at least two to
+              three months after the event ends. After organizer pinning ends, continued retrieval is not
+              guaranteed unless other IPFS nodes retain the content. Unpinning media from the organizer&rsquo;s node
+              does not guarantee that copies held elsewhere have been removed.
+            </p>
+          </Callout>
+        </div>
+      </section>
+
+      <section class="doc-section" aria-labelledby="removal">
+        <h2 id="removal">Requesting media removal</h2>
+        <p>
+          To request removal of media from the organizer-controlled IPFS node and the Public submission map,
+          contact the event team through <a href="/help/#official-contact">Help</a>.
+        </p>
+        <div class="notice-slot">
+          <Callout intent="irreversible">
+            <p>
+              If the request is approved, the team unpins the media from the organizer&rsquo;s IPFS node and
+              blacklists the Attestation from the Public submission map, so the media is not displayed there. The
+              on-chain Attestation remains. Copies of the media retained by other IPFS nodes may remain accessible,
+              and the event team cannot guarantee network-wide deletion.
+            </p>
+          </Callout>
+        </div>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  main#main[data-document] {
+    max-width: 1760px;
+    padding: 0;
+  }
+
+  .doc-body {
+    padding: 48px 48px 84px;
+  }
+
+  .doc-section {
+    margin-top: var(--space-lg, 2rem);
+  }
+
+  .doc-section:first-child {
+    margin-top: 0;
+  }
+
+  .notice-slot {
+    margin: var(--space-sm, 1rem) 0 var(--space-md, 1.5rem);
+  }
+
+  h2 {
+    max-width: 74ch;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin: 0 0 var(--space-sm, 1rem);
+    color: var(--text);
+  }
+
+  p,
+  ul {
+    max-width: 74ch;
+    line-height: 1.65;
+    color: var(--text-2);
+    margin: 0 0 var(--space-sm, 1rem);
+  }
+
+  p:last-child,
+  ul:last-child {
+    margin-bottom: 0;
+  }
+
+  ul {
+    padding-inline-start: 1.25rem;
+  }
+
+  @media (max-width: 900px) {
+    .doc-body {
+      padding: 32px 18px 56px;
+    }
+  }
+</style>

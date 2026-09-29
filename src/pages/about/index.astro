@@ -1,0 +1,150 @@
+---
+import DocumentTitleBlock from '../../components/DocumentTitleBlock.astro';
+import Provisional from '../../components/Provisional.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../lib/site-config';
+import { splitProvisional } from '../../lib/provisional';
+
+const eligibilityCopy =
+  'The working assumption is that participation is limited to eligible UMD students who are physically affiliated with the University of Maryland during the event. The organizers still need to confirm {{the final treatment of undergraduate, graduate, online, visiting-student, and age requirements}}.';
+---
+
+<BaseLayout
+  title={`About — ${siteConfig.eventTitle}`}
+  description={`A plain-language overview of the ${siteConfig.eventTitle}: dates, audience, eligibility, and how Submissions become public.`}
+>
+  <main id="main" data-document>
+    <DocumentTitleBlock>
+      <Fragment slot="title">About the {siteConfig.eventTitle}</Fragment>
+      <Fragment slot="lead">
+        <p>
+          The {siteConfig.eventTitle} invites eligible UMD students to explore the University&rsquo;s official
+          campus Gardens throughout October. Participants can discover Gardens at their own pace, make original
+          Captures of plants and garden features, and contribute Submissions that may appear as Observations on a
+          separate Public submission map.
+        </p>
+      </Fragment>
+    </DocumentTitleBlock>
+
+    <div class="doc-body">
+      <section class="doc-section" aria-labelledby="event-details">
+        <h2 id="event-details">Event details</h2>
+        <dl class="details">
+          <dt>Dates</dt>
+          <dd>{siteConfig.eventDates}</dd>
+          <dt>Location</dt>
+          <dd>Official campus Gardens at the University of Maryland</dd>
+          <dt>Audience</dt>
+          <dd>{siteConfig.audienceLine}</dd>
+          <dt>Cost</dt>
+          <dd>Free</dd>
+          <dt>Capture app</dt>
+          <dd>Proofmode</dd>
+          <dt>Public results</dt>
+          <dd>A separate Public submission map</dd>
+        </dl>
+      </section>
+
+      <section class="doc-section" aria-labelledby="why-participate">
+        <h2 id="why-participate">Why participate?</h2>
+        <p>
+          The Garden Crawl is an opportunity to spend time outdoors, learn more about campus landscapes, share garden
+          life as verifiable Submissions, and take part in an experiment in verifiable community documentation.
+        </p>
+        <p>
+          The event is designed around original, in-person Captures. Proofmode associates a Capture with evidence
+          about its time and location, and the resulting Attestation can be checked independently.
+        </p>
+      </section>
+
+      <section class="doc-section" aria-labelledby="verifiable">
+        <h2 id="verifiable">What makes a Submission verifiable?</h2>
+        <p>
+          A Submission is verifiable when original Proofmode Capture evidence can be independently checked against
+          the event&rsquo;s rules. See the <a href="/compete/">full rule set on Compete</a>.
+        </p>
+      </section>
+
+      <section class="doc-section" aria-labelledby="eligibility">
+        <h2 id="eligibility">Current eligibility assumption</h2>
+        <p>
+          {
+            splitProvisional(eligibilityCopy).map((seg) =>
+              seg.provisional ? <Provisional>{seg.text}</Provisional> : seg.text,
+            )
+          }
+        </p>
+      </section>
+
+      <section class="doc-section" aria-labelledby="visibility">
+        <h2 id="visibility">A note about public visibility</h2>
+        <p>
+          The event is designed for public transparency: some Submission details appear on the Public submission
+          map, while names and contact details do not. Read the <a href="/privacy/">canonical field list on Privacy</a>{' '}
+          before participating.
+        </p>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  main#main[data-document] {
+    max-width: 1760px;
+    padding: 0;
+  }
+
+  .doc-body {
+    padding: 48px 48px 84px;
+  }
+
+  .doc-section {
+    margin-top: var(--space-lg, 2rem);
+  }
+
+  .doc-section:first-child {
+    margin-top: 0;
+  }
+
+  h2 {
+    max-width: 74ch;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin: 0 0 var(--space-sm, 1rem);
+    color: var(--text);
+  }
+
+  p,
+  .details {
+    max-width: 74ch;
+    line-height: 1.65;
+    color: var(--text-2);
+    margin: 0 0 var(--space-sm, 1rem);
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  .details {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-xs, 0.75rem) var(--space-sm, 1rem);
+  }
+
+  .details dt {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .details dd {
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .doc-body {
+      padding: 32px 18px 56px;
+    }
+  }
+</style>
