@@ -1,10 +1,10 @@
 export const siteConfig = {
   eventTitle: 'UMD Garden Crawl',
-  eventDates: 'October 1–31, 2026',
+  eventDates: 'October 9th - November 8th, 2026',
   // Compact form for chrome that has no room for the long sentence form:
   // the announcement strip and the footer.
-  eventDatesShort: '01–31 Oct 2026',
-  audienceLine: 'Eligible UMD students, subject to organizer confirmation',
+  eventDatesShort: 'Oct. 9 - Nov. 8, 2026',
+  audienceLine: 'Open to the UMD Campus Community',
   supportEmail: null as string | null,
   proofMode: { version: '{{not yet validated}}', verifiedOn: '{{pending walkthrough}}' },
   partners: [

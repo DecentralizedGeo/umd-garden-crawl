@@ -11,8 +11,8 @@ describe('splitProvisional', () => {
   });
 
   test('returns a single non-provisional segment when there are no spans', () => {
-    expect(splitProvisional('The event is scheduled for October 1–31, 2026.')).toEqual([
-      { text: 'The event is scheduled for October 1–31, 2026.', provisional: false },
+    expect(splitProvisional('The event is scheduled for October 9th - November 8th, 2026.')).toEqual([
+      { text: 'The event is scheduled for October 9th - November 8th, 2026.', provisional: false },
     ]);
   });
 
