@@ -8,6 +8,11 @@ export const siteConfig = {
   supportEmail: null as string | null,
   proofMode: { version: '{{not yet validated}}', verifiedOn: '{{pending walkthrough}}' },
   partners: [
+    { name: 'Decentralized Geospatial Collaborative', logo: '/logos/decentralized-geo.png', url: 'https://decentralizedgeo.org/' },
+    {
+      name: 'EASIER Data Initiative',
+      logo: '/logos/easier-data.png',
+      url: 'https://easierdata.org/'    },
     { name: 'Open Geospatial Consortium', logo: '/logos/OGC.png', url: 'https://www.ogc.org/' },
     { name: 'UMD Department of Geographical Sciences', logo: '/logos/UMD_Geog.png', url: 'https://geog.umd.edu/' },
     { name: 'Astral', logo: '/logos/astral.svg', url: 'https://www.astral.global/' },

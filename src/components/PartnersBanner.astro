@@ -1,10 +1,9 @@
 ---
 import { siteConfig } from '../lib/site-config';
 
-// Continuous marquee (spec Story 29-30): a duplicated track scrolls
+// Continuous marquee: a duplicated track scrolls
 // seamlessly; `prefers-reduced-motion` freezes it. Logos are static files in
 // /public/logos, shown on light tiles because most are dark-on-transparent.
-// Entities sourced from https://decentralizedgeo.org/.
 ---
 
 <section class="partners" aria-label="Partners">
@@ -14,7 +13,7 @@ import { siteConfig } from '../lib/site-config';
       <ul class="marquee-set">
         {siteConfig.partners.map((partner) => (
           <li>
-            <a href={partner.url} target="_blank" rel="noopener noreferrer" aria-label={`${partner.name} (opens in a new tab, external site)`}>
+            <a href={partner.url} target="_blank" rel="noopener noreferrer" title={partner.name} aria-label={`${partner.name} (opens in a new tab, external site)`}>
               <img src={partner.logo} alt={partner.name} decoding="async" />
             </a>
           </li>
@@ -23,7 +22,7 @@ import { siteConfig } from '../lib/site-config';
       <ul class="marquee-set" aria-hidden="true">
         {siteConfig.partners.map((partner) => (
           <li>
-            <a href={partner.url} target="_blank" rel="noopener noreferrer" aria-label={`${partner.name} (opens in a new tab, external site)`} tabindex="-1">
+            <a href={partner.url} target="_blank" rel="noopener noreferrer" title={partner.name} aria-label={`${partner.name} (opens in a new tab, external site)`} tabindex="-1">
               <img src={partner.logo} alt="" decoding="async" />
             </a>
           </li>
@@ -54,7 +53,7 @@ import { siteConfig } from '../lib/site-config';
   .marquee-track {
     display: flex;
     width: max-content;
-    animation: marquee 38s linear infinite;
+    animation: marquee 30s linear infinite;
   }
 
   @keyframes marquee {
