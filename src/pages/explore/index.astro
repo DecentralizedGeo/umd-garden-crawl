@@ -31,10 +31,24 @@ const submissionAreasCopy =
     <!-- Garden reference map: full width of the page frame, edge to
          hairline. Ignores the prose measure cap; does not break out to
          the viewport. The coming-soon placeholder uses the same slot. -->
-    <div class="map-slot">
+    <div class="map-slot" data-map-slot>
       {
         gardenReferenceMap.available && gardenReferenceMap.url ? (
-          <iframe class="garden-reference-map" src={gardenReferenceMap.url} title="Garden reference map" allowfullscreen />
+          <>
+            <div class="map-toolbar">
+              <span class="mono map-toolbar-label">Interactive map</span>
+              <button type="button" class="map-expand" data-map-toggle aria-expanded="false">
+                <svg class="icon-expand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+                </svg>
+                <svg class="icon-close" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+                <span data-map-toggle-label>Expand map</span>
+              </button>
+            </div>
+            <iframe class="garden-reference-map" src={gardenReferenceMap.url} title="Garden reference map" allowfullscreen />
+          </>
         ) : (
           <div class="map-placeholder">
             <svg
@@ -85,6 +99,30 @@ const submissionAreasCopy =
   </main>
 </BaseLayout>
 
+<script>
+  // In-page "full screen": the map slot becomes a fixed overlay. The browser
+  // Fullscreen API is unavailable for iframes on iPhone Safari, so this works
+  // everywhere. Esc or the button collapses it again.
+  const slot = document.querySelector<HTMLElement>("[data-map-slot]");
+  const toggle = slot?.querySelector<HTMLButtonElement>("[data-map-toggle]");
+  const label = slot?.querySelector<HTMLElement>("[data-map-toggle-label]");
+
+  if (slot && toggle && label) {
+    const setExpanded = (expanded: boolean) => {
+      slot.classList.toggle("is-expanded", expanded);
+      document.documentElement.style.overflow = expanded ? "hidden" : "";
+      toggle.setAttribute("aria-expanded", String(expanded));
+      label.textContent = expanded ? "Close map" : "Expand map";
+      toggle.focus();
+    };
+
+    toggle.addEventListener("click", () => setExpanded(!slot.classList.contains("is-expanded")));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && slot.classList.contains("is-expanded")) setExpanded(false);
+    });
+  }
+</script>
+
 <style>
   main#main[data-document] {
     max-width: 1760px;
@@ -93,6 +131,65 @@ const submissionAreasCopy =
 
   .map-slot {
     border-bottom: 1px solid var(--border);
+  }
+
+  .map-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px 8px 18px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .map-toolbar-label {
+    color: var(--text-4);
+  }
+
+  .map-expand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid var(--border-2);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--accent);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .map-expand:hover,
+  .map-expand:focus-visible {
+    border-color: var(--accent-solid);
+  }
+
+  .icon-close,
+  .is-expanded .icon-expand {
+    display: none;
+  }
+
+  .is-expanded .icon-close {
+    display: block;
+  }
+
+  .map-slot.is-expanded {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    border-bottom: 0;
+  }
+
+  .is-expanded .garden-reference-map {
+    flex: 1;
+    min-height: 0;
+    aspect-ratio: auto;
   }
 
   .garden-reference-map {

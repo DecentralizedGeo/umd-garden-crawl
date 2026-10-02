@@ -8,12 +8,16 @@ export const siteConfig = {
   supportEmail: null as string | null,
   proofMode: { version: '{{not yet validated}}', verifiedOn: '{{pending walkthrough}}' },
   partners: [
-    'Open Geospatial Consortium',
-    'UMD Department of Geographical Sciences',
-    'Astral',
-    'Filecoin Foundation for the Decentralized Web',
-    'Climate Collective',
-    'International Center for Innovation in Geospatial Analytics & Earth Observation',
+    { name: 'Open Geospatial Consortium', logo: '/logos/OGC.png', url: 'https://www.ogc.org/' },
+    { name: 'UMD Department of Geographical Sciences', logo: '/logos/UMD_Geog.png', url: 'https://geog.umd.edu/' },
+    { name: 'Astral', logo: '/logos/astral.svg', url: 'https://www.astral.global/' },
+    { name: 'Filecoin Foundation for the Decentralized Web', logo: '/logos/FFDW.png', url: 'https://ffdweb.org/' },
+    { name: 'Climate Collective', logo: '/logos/climate-collective.gif', url: 'https://climatecollective.org/' },
+    {
+      name: 'International Center for Innovation in Geospatial Analytics & Earth Observation',
+      logo: '/logos/intgeocenter.png',
+      url: 'https://intgeocenter.org/',
+    },
   ],
   gardenReferenceMapUrl:
     'https://uofmd.maps.arcgis.com/apps/instant/countdown/index.html?appid=8b4f00fdc9b04782a4738c473fcbb3a3',
