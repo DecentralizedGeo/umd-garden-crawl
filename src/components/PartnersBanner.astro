@@ -1,9 +1,9 @@
 ---
 import { siteConfig } from '../lib/site-config';
 
-// Continuous marquee (spec Story 29-30): a duplicated track scrolls
-// seamlessly; `prefers-reduced-motion` freezes it. No logo images — this
-// site has no image pipeline. Entities sourced from https://decentralizedgeo.org/.
+// Continuous marquee: a duplicated track scrolls
+// seamlessly; `prefers-reduced-motion` freezes it. Logos are static files in
+// /public/logos, shown on light tiles because most are dark-on-transparent.
 ---
 
 <section class="partners" aria-label="Partners">
@@ -11,10 +11,22 @@ import { siteConfig } from '../lib/site-config';
   <div class="marquee">
     <div class="marquee-track">
       <ul class="marquee-set">
-        {siteConfig.partners.map((name) => <li>{name}</li>)}
+        {siteConfig.partners.map((partner) => (
+          <li>
+            <a href={partner.url} target="_blank" rel="noopener noreferrer" title={partner.name} aria-label={`${partner.name} (opens in a new tab, external site)`}>
+              <img src={partner.logo} alt={partner.name} decoding="async" />
+            </a>
+          </li>
+        ))}
       </ul>
       <ul class="marquee-set" aria-hidden="true">
-        {siteConfig.partners.map((name) => <li>{name}</li>)}
+        {siteConfig.partners.map((partner) => (
+          <li>
+            <a href={partner.url} target="_blank" rel="noopener noreferrer" title={partner.name} aria-label={`${partner.name} (opens in a new tab, external site)`} tabindex="-1">
+              <img src={partner.logo} alt="" decoding="async" />
+            </a>
+          </li>
+        ))}
       </ul>
     </div>
   </div>
@@ -41,7 +53,7 @@ import { siteConfig } from '../lib/site-config';
   .marquee-track {
     display: flex;
     width: max-content;
-    animation: marquee 38s linear infinite;
+    animation: marquee 30s linear infinite;
   }
 
   @keyframes marquee {
@@ -73,9 +85,31 @@ import { siteConfig } from '../lib/site-config';
     align-items: center;
     gap: 40px;
     padding-right: 40px;
-    color: var(--text-2);
-    font-size: 1.0625rem;
-    white-space: nowrap;
+  }
+
+  .marquee-set a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 96px;
+    padding: 14px 22px;
+    border-radius: 8px;
+    background: #fff;
+    opacity: 0.88;
+    transition: opacity 0.15s ease;
+  }
+
+  .marquee-set a:hover,
+  .marquee-set a:focus-visible {
+    opacity: 1;
+  }
+
+  .marquee-set img {
+    display: block;
+    height: 100%;
+    width: auto;
+    max-width: 320px;
+    object-fit: contain;
   }
 
   .marquee-set li::after {
@@ -94,7 +128,11 @@ import { siteConfig } from '../lib/site-config';
     .marquee-set li {
       gap: 24px;
       padding-right: 24px;
-      font-size: 0.9375rem;
+    }
+
+    .marquee-set a {
+      height: 76px;
+      padding: 10px 16px;
     }
   }
 </style>
