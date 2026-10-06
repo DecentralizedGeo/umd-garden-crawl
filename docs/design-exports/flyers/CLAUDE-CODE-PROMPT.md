@@ -18,7 +18,7 @@ This HTML was exported from an approved Cursor canvas schematic (400px wide = 8.
 
 ## Job of the sheet
 
-Hallway / lab conversion. Someone should read: claim → specimen (this is a real verified capture) → how to capture (ProofMode) → where to learn more (event URL). The website already carries rules, prizes, and setup. Paper does not replace the site.
+Hallway / lab conversion. Someone should read: claim → specimen (this is a real verified capture) → how to capture (Proofmode) → where to learn more (event URL). The website already carries rules, prizes, and setup. Paper does not replace the site.
 
 ## Locked copy (verbatim)
 
@@ -39,7 +39,7 @@ Do not rewrite, shorten, or add marketing language.
   - uid: `0x44225f…3591e5`
 - Chip: `VERIFIED` (uppercase) with green dot
 - Link: `Verify on ProofCheck` → `https://check.proofmode.org/#bafybeigy6ysecknnlqk5qkfxsv2z7mxahjqyvp3xbvinlaqosrcou3xpla`
-- Capture lockup: `Capture with` / `ProofMode` / `proofmode.org`
+- Capture lockup: `Capture with` / `Proofmode` / `proofmode.org`
 - Participate: `Details on how to participate` / `gardencrawl.easierdata.org`
 
 ## Locked layout
@@ -50,7 +50,7 @@ Top to bottom, one column:
 2. Claim left, invite + dates right
 3. Dek
 4. Specimen card fills leftover height
-5. Two-pane footer: ProofMode lockup | participate URL
+5. Two-pane footer: Proofmode lockup | participate URL
 
 Specimen card:
 
@@ -68,7 +68,7 @@ Ledger sprockets on the left edge + hairline inset. Keep them; they are the pape
 - No site graph-paper grid
 - No word “Free”
 - No prize dollar amounts
-- ProofMode is a **capture lockup** (official mark + name + proofmode.org). Never “required”, never a warning
+- Proofmode is a **capture lockup** (official mark + name + proofmode.org). Never “required”, never a warning
 - Do not look like a screenshot of the website. Same type and tokens, different object (a letter)
 - No gradients, no box-shadows on the sheet, no rounded cards, no emojis, no extra illustration
 - Type: **Archivo** for prose/headings, **IBM Plex Mono** for labels and machine values. Monospace is semantic (spec keys, CIDs, URLs, chip), not decoration
@@ -95,7 +95,7 @@ This is the actual design work:
 3. Check **both** themes after every visual change
 4. If a change needs more than tokens, duplicate it in both `.sheet` trees
 5. If you replace `weber-memorial.jpg`, keep the swallowtail at Weber Memorial Garden. The current file is 720×540 and is **placeholder resolution** — swapping a higher-res original of the same frame is encouraged
-6. Do not change ProofMode mark colors; it is the official SVG
+6. Do not change Proofmode mark colors; it is the official SVG
 
 ## Done when
 

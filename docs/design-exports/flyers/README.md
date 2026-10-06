@@ -14,7 +14,7 @@ Keep `artboard-export.js` and `html2canvas.min.js` in `flyer-working-design/` ne
 
 - `garden-crawl-ledger.html` — dark + light letter artboards, print toolbar
 - `weber-memorial.jpg` — Weber Memorial Garden specimen (720×540; replace with a higher-res original of the same frame before a real print run)
-- `proofmode-mark.svg` — official ProofMode mark
+- `proofmode-mark.svg` — official Proofmode mark
 - `CLAUDE-CODE-PROMPT.md` — paste-ready brief for Claude Code design
 
 ## View
