@@ -112,7 +112,7 @@ const sampleAttestationCid = truncateMiddle(SAMPLE_ATTESTATION_CID, 10, 6);
         <p class="mono hero-eyebrow">UMD Campus Event · {siteConfig.eventDates}</p>
         <h1 class="hero-title">Real Places. Real moments.<br /><span class="accent">Verified.</span></h1>
         <p class="hero-lead">
-          Get outside and experience UMD’s Arboretum and Botanical Gardens for yourself. Compete for an opportunity to win prizes.
+          Get outside and experience UMD’s Arboretum and Botanical Gardens for yourself. Compete for an opportunity to upwards of $1,000 in prizes.
           Photograph the places, plants, wildlife, and moments you encounter with Proofmode for Android, then contribute a trusted record of
           what was seen, where it happened, and when.
         </p>
@@ -296,7 +296,7 @@ const sampleAttestationCid = truncateMiddle(SAMPLE_ATTESTATION_CID, 10, 6);
         <p class="section-lead">
           The {siteConfig.eventTitle}, is an invitation to step outside, look more closely, and share the places and moments that make UMD’s
           campus feel alive. From a favorite garden path to an unexpected bloom or a wildlife encounter, every Submission starts
-          with something you experienced yourself. Take part for a chance to win gift-card prizes while helping build a trusted
+          with something you experienced yourself. Take part for a chance to win up to $1,000 in gift cards and prizes while helping build a trusted
           record of UMD’s living landscape. <em>The event runs {siteConfig.eventDates}</em>
         </p>
         <p class="section-lead">
@@ -317,9 +317,8 @@ const sampleAttestationCid = truncateMiddle(SAMPLE_ATTESTATION_CID, 10, 6);
         <a class="mono section-link" href="/compete/">Categories &amp; rules →</a>
       </div>
       <div class="index-lead-wrap">
-        <p class="section-lead">
-          Explore on your own terms from {siteConfig.eventDates} and compete for gift-card prizes. Win a $100 gift card in the Garden Crawl Challenge, Daily Visitor, or
-          Explorer category, or be one of three participants selected to each receive a $50 gift card for Nature in Focus.
+        <p class="section-lead index-lead">
+          Explore on your own terms from {siteConfig.eventDates} and compete for up to $1,000 in gift cards and prizes.
         </p>
       </div>
       <div class="index-rows">
@@ -1068,6 +1067,12 @@ const sampleAttestationCid = truncateMiddle(SAMPLE_ATTESTATION_CID, 10, 6);
 
   .index-lead-wrap {
     padding: 0 48px;
+  }
+
+  /* Lifts .section-lead's 74ch cap so the one-sentence intro stays on one line
+     when there is room; it still wraps on narrow viewports. */
+  .index-lead {
+    max-width: none;
   }
 
   .index-rows {
