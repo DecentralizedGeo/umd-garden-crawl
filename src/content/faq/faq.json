@@ -180,5 +180,12 @@
     "question": "Is the Public submission map the complete on-chain record of Attestations?",
     "answer": "No. The Public submission map applies event and geographic filters, review status, media availability, and blacklist rules. An Attestation hidden from the Public submission map may still exist on-chain.",
     "order": 26
+  },
+  {
+    "id": "What about the iOS version of Proofmode?",
+    "category": "Proofmode",
+    "question": "What about the iOS version of Proofmode?",
+    "answer": "The Android version of Proofmode contains a new experimental feature our team has been developing for capturing cryptographically verifiable location data. This experimental feature for the iOS version of Proofmode is currently in development.",
+    "order": 27
   }
 ]
