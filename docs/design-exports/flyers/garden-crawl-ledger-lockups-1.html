@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UMD Garden Crawl — Ledger letter (dark + light drafts)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" />
+  <style>
+    /*
+      Letter drafts scaled from the Cursor canvas schematic (400px = 8.5in).
+      --u is one schematic pixel. Tweak type/spacing with calc(N * var(--u)).
+      Theme tokens match src/components/BaseHead.astro / docs/design-system.md.
+    */
+    :root {
+      --u: calc(8.5in / 400);
+      --preview: 0.82;
+      --font-sans: "Archivo", "IBM Plex Sans", system-ui, sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+      --workspace: #6b6458;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--workspace);
+      color: #f4efe4;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-underline-offset: 0.12em; }
+    a:hover { color: var(--text); }
+
+    .chrome {
+      max-width: 17.5in;
+      margin: 0 auto;
+      padding: 20px 24px 8px;
+    }
+    .chrome h1 {
+      margin: 0 0 6px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .chrome p {
+      margin: 0 0 14px;
+      color: #ddd4c4;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      max-width: 72ch;
+    }
+    .chrome kbd {
+      font-family: var(--font-mono);
+      font-size: 0.75em;
+      padding: 0.1em 0.35em;
+      border: 1px solid rgba(244, 239, 228, 0.28);
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .actions button,
+    .actions label {
+      appearance: none;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      padding: 8px 12px;
+      border: 1px solid rgba(244, 239, 228, 0.28);
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+    }
+    .actions button:hover { background: rgba(244, 239, 228, 0.08); }
+    .actions label { display: inline-flex; align-items: center; gap: 8px; cursor: default; }
+    .actions input[type="range"] { width: 120px; }
+
+    .board {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 28px 36px;
+      padding: 8px 24px 48px;
+    }
+    .frame { display: flex; flex-direction: column; gap: 8px; }
+    .frame figcaption {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ddd4c4;
+    }
+
+    .sheet {
+      position: relative;
+      width: 8.5in;
+      height: 11in;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid #1a1a1a;
+      font-family: var(--font-sans);
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+    @media screen {
+      .sheet { zoom: var(--preview); }
+    }
+
+    .sheet[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0b1015;
+      --surface: #0e151b;
+      --border: #1c2a33;
+      --border-2: #24333d;
+      --rule: #1a262e;
+      --text: #e4ecf0;
+      --text-2: #a8bcc6;
+      --text-3: #93a7b1;
+      --text-4: #5f7b88;
+      --accent: #7ed4e2;
+      --accent-solid: #1f7a8c;
+      --ok: #6fc79b;
+      --ok-soft: rgba(79, 158, 119, 0.14);
+    }
+    .sheet[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f6f3ec;
+      --surface: #ece7db;
+      --border: #ccc3ae;
+      --border-2: #cfc5ae;
+      --rule: #e0d9c8;
+      --text: #14100b;
+      --text-2: #3c362b;
+      --text-3: #5c5445;
+      --text-4: #8a8272;
+      --accent: #1a6a79;
+      --accent-solid: #1f7a8c;
+      --ok: #2f6b4d;
+      --ok-soft: rgba(63, 122, 92, 0.12);
+    }
+
+    .contact {
+      position: absolute;
+      left: 50%;
+      bottom: calc(13 * var(--u));
+      transform: translate(-50%, 50%);
+      padding: 0 calc(8 * var(--u));
+      background: var(--bg);
+      font-family: var(--font-mono);
+      font-size: calc(7.5 * var(--u));
+      letter-spacing: 0.04em;
+      line-height: 1;
+      color: var(--text-3);
+      white-space: nowrap;
+    }
+    .contact a { text-decoration: none; }
+    .inset {
+      position: absolute;
+      inset: calc(13 * var(--u));
+      border: 1px solid var(--border);
+      pointer-events: none;
+    }
+
+    .inner {
+      position: relative;
+      height: 100%;
+      padding: calc(27 * var(--u)) calc(26 * var(--u)) calc(23 * var(--u)) calc(32 * var(--u));
+      display: flex;
+      flex-direction: column;
+      gap: calc(14 * var(--u));
+    }
+
+    .masthead { flex-shrink: 0; }
+
+    .kicker {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      gap: 1ch;
+      font-family: var(--font-mono);
+      font-size: calc(8 * var(--u));
+      color: var(--text-3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: calc(12 * var(--u));
+      white-space: nowrap;
+    }
+    .kicker .audience { letter-spacing: 0.04em; text-transform: none; }
+
+    .hero {
+      position: relative;
+      margin-bottom: calc(12 * var(--u));
+    }
+    .partners {
+      position: absolute;
+      top: calc(4 * var(--u));
+      right: calc(4 * var(--u));
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: calc(14 * var(--u));
+    }
+    .lockup {
+      position: relative;
+      display: block;
+      padding: calc(1.5 * var(--u)) calc(4 * var(--u));
+      margin: calc(-1.5 * var(--u)) calc(-4 * var(--u));
+      border-radius: calc(5 * var(--u));
+    }
+    .sheet[data-theme="dark"] .lockup { background: #ffffff; }
+    .lockup img {
+      display: block;
+      width: calc(77 * var(--u));
+      height: auto;
+    }
+    .capture .platform {
+      position: absolute;
+      left: 0;
+      bottom: calc(100% + 3 * var(--u));
+      font-family: var(--font-mono);
+      font-size: calc(8 * var(--u));
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1;
+      padding: calc(3 * var(--u)) calc(6 * var(--u));
+      color: #ffffff;
+      background: var(--accent-solid);
+      border-radius: calc(4 * var(--u));
+      white-space: nowrap;
+    }
+    .lockup img.cgis { mix-blend-mode: multiply; }
+    .claim {
+      margin: 0;
+      font-size: calc(32 * var(--u));
+      white-space: nowrap;
+      font-weight: 700;
+      line-height: 1.04;
+      letter-spacing: -0.028em;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .claim em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .when {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: calc(10 * var(--u));
+      padding-bottom: calc(12 * var(--u));
+      margin-bottom: calc(12 * var(--u));
+      border-bottom: 1px solid var(--border);
+    }
+    .when .invite {
+      font-size: calc(12.5 * var(--u));
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      white-space: nowrap;
+      margin: 0;
+    }
+    .when .dates {
+      margin: 0;
+      font-size: calc(12.5 * var(--u));
+      font-weight: 700;
+      line-height: 1.2;
+      white-space: nowrap;
+      letter-spacing: -0.01em;
+    }
+    .dek .prize { color: var(--text); font-weight: 700; white-space: nowrap; }
+    .dek {
+      margin: 0;
+      font-size: calc(13 * var(--u));
+      line-height: 1.42;
+      color: var(--text-2);
+      max-width: none;
+      margin-inline: auto;
+      text-align: center;
+      text-wrap: balance;
+    }
+
+    .specimen {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid color-mix(in srgb, var(--text-4) 55%, var(--border-2));
+      background: var(--surface);
+    }
+
+    .spec {
+      margin: 0;
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: transparent;
+      z-index: 1;
+      height: 100%;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: calc(8 * var(--u));
+      flex: 1 1 0;
+      min-height: 0;
+      padding: 0 calc(11 * var(--u));
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: calc(9.5 * var(--u));
+      line-height: 1.35;
+    }
+    .row dt {
+      margin: 0;
+      color: var(--text-3);
+      flex-shrink: 0;
+      font-weight: 400;
+    }
+    .row dd {
+      margin: 0;
+      color: var(--text);
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+    .row dd.hi { color: var(--accent); }
+
+    .card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: calc(6 * var(--u));
+      flex: 1 1 0;
+      min-height: 0;
+      padding: 0 calc(11 * var(--u));
+      font-family: var(--font-mono);
+      font-size: calc(8.5 * var(--u));
+    }
+    .chip-ok {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(6 * var(--u));
+      padding: calc(3 * var(--u)) calc(8 * var(--u));
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      line-height: 1;
+      text-transform: uppercase;
+      color: var(--ok);
+      background: var(--ok-soft);
+      border: 1px solid color-mix(in srgb, var(--ok) 70%, var(--border-2));
+    }
+    .chip-dot {
+      width: calc(5 * var(--u));
+      height: calc(5 * var(--u));
+      border-radius: 99px;
+      background: var(--ok);
+      flex-shrink: 0;
+    }
+    .proofcheck {
+      color: var(--accent);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .photo {
+      position: relative;
+      width: 38%;
+      flex: 0 0 38%;
+      overflow: hidden;
+      border-left: 1px solid color-mix(in srgb, var(--text-4) 55%, var(--border-2));
+      background: var(--surface);
+    }
+    .photo img {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      max-width: none;
+    }
+
+    .colophon {
+      flex-shrink: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: calc(25 * var(--u));
+      border-top: 1px solid var(--border);
+    }
+    .capture {
+      position: relative;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto auto;
+      column-gap: calc(8 * var(--u));
+      row-gap: 1px;
+      align-items: center;
+      padding-right: calc(12 * var(--u));
+    }
+    .capture img {
+      grid-column: 1;
+      grid-row: 1 / 4;
+      align-self: center;
+      width: calc(46 * var(--u));
+      height: calc(46 * var(--u));
+      display: block;
+    }
+    .capture .eyebrow {
+      grid-column: 2;
+      grid-row: 1;
+      font-size: calc(10 * var(--u));
+      color: var(--text-3);
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+    .capture .brand {
+      grid-column: 2;
+      grid-row: 2;
+      font-size: calc(16 * var(--u));
+      font-weight: 700;
+      line-height: 1.12;
+    }
+    .capture a {
+      grid-column: 2;
+      grid-row: 3;
+      font-family: var(--font-mono);
+      font-size: calc(10 * var(--u));
+      text-decoration: none;
+    }
+    .more {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: calc(4 * var(--u));
+      padding-left: calc(12 * var(--u));
+      border-left: 1px solid var(--border);
+      min-width: 0;
+    }
+    .more p {
+      margin: 0;
+      font-size: calc(10.5 * var(--u));
+      white-space: nowrap;
+      color: var(--text-2);
+      line-height: 1.3;
+    }
+    .more a {
+      font-family: var(--font-mono);
+      font-size: calc(10 * var(--u));
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    .more .eyebrow {
+      font-size: calc(10 * var(--u));
+      color: var(--text-3);
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+    .more .brand {
+      font-size: calc(16 * var(--u));
+      font-weight: 700;
+      line-height: 1.12;
+      color: var(--text);
+    }
+    .more { gap: 1px; }
+    @page { size: letter portrait; margin: 0; }
+    @media print {
+      body { background: white; }
+      .chrome, .frame figcaption { display: none !important; }
+      .board { display: block; padding: 0; gap: 0; }
+      .frame { display: block; }
+      .sheet {
+        zoom: 1;
+        border: 0;
+        page-break-after: always;
+        break-after: page;
+      }
+      .sheet:last-child { page-break-after: auto; break-after: auto; }
+      body[data-print="dark"] .sheet[data-theme="light"],
+      body[data-print="light"] .sheet[data-theme="dark"] { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="chrome">
+    <h1>UMD Garden Crawl — ledger letter drafts</h1>
+    <p>
+      Two 8.5×11 sheets from the locked canvas layout. Dark is the site default;
+      light is the copier-friendly alternate. Print with <strong>Background graphics</strong>
+      on, paper size <strong>Letter</strong>, margins <strong>None</strong>.
+      In Chrome: <kbd>More settings → Background graphics</kbd>.
+    </p>
+    <div class="actions">
+      <button type="button" id="exportBtn" onclick="exportPNGs(this)">Export PNGs (dark + light)</button>
+      <button type="button" onclick="printSheets('dark')">Print dark</button>
+      <button type="button" onclick="printSheets('light')">Print light</button>
+      <button type="button" onclick="printSheets('both')">Print both</button>
+      <label>Preview
+        <input id="preview" type="range" min="50" max="100" value="82"
+          oninput="document.documentElement.style.setProperty('--preview', this.value / 100)" />
+      </label>
+    </div>
+  </header>
+
+  <main class="board">
+    <figure class="frame">
+      <figcaption>Dark · letter</figcaption>
+      <!-- Dark sheet. Keep markup identical to light except data-theme. -->
+      <div class="sheet" data-theme="dark">
+        <div class="inset" aria-hidden="true"></div>
+        <div class="inner">
+          <header class="masthead">
+            <div class="kicker">
+              <span>Campus wide event | College Park, MD |</span>
+              <span class="audience">Open to the UMD Community</span>
+            </div>
+            <div class="hero">
+              <h2 class="claim">Real Places.<br />Real Moments.<br /><em>Verified.</em></h2>
+              <div class="partners">
+                <span class="lockup"><img src="easier-data.png" alt="Easier Data Initiative" /></span>
+                <span class="lockup"><img class="cgis" src="cgis.jpg" alt="Center for Geospatial Information Science, University of Maryland" /></span>
+              </div>
+            </div>
+            <div class="when">
+              <p class="invite">Join the UMD Garden Crawl</p>
+              <p class="dates">09 Oct – 08 Nov 2026</p>
+            </div>
+            <p class="dek">Take part for a chance to win <strong class="prize">up to $1,000</strong> in gift cards and prizes while helping build a trusted record of UMD’s living landscape.</p>
+          </header>
+
+          <div class="specimen">
+            <article class="card">
+              <dl class="spec">
+                <div class="row"><dt>garden</dt><dd>Weber Memorial Garden</dd></div>
+                <div class="row"><dt>time</dt><dd>18 Aug 2026  ·  12:16 EDT</dd></div>
+                <div class="row"><dt>coordinates</dt><dd class="hi">38.99070,  −76.94155</dd></div>
+                <div class="row"><dt>wallet</dt><dd class="hi">0xbEd1…d5cE</dd></div>
+                <div class="row"><dt>proofset_cid</dt><dd class="hi">bafybeigy6…u3xpla</dd></div>
+                <div class="row"><dt>uid</dt><dd class="hi">0x44225f…3591e5</dd></div>
+                <div class="card-foot">
+                  <span class="chip-ok"><span class="chip-dot" aria-hidden="true"></span>Verified</span>
+                  <a class="proofcheck" href="https://check.proofmode.org/#bafybeigy6ysecknnlqk5qkfxsv2z7mxahjqyvp3xbvinlaqosrcou3xpla">Verify on ProofCheck</a>
+                </div>
+              </dl>
+              <div class="photo">
+                <img src="weber-memorial.jpg" alt="Tiger swallowtail on lilac at Weber Memorial Garden" />
+              </div>
+            </article>
+          </div>
+
+          <footer class="colophon">
+            <div class="capture"><span class="platform">Android Only</span>
+              <img src="proofmode-mark.svg" alt="" width="46" height="46" />
+              <span class="eyebrow">Capture with</span>
+              <span class="brand">Proofmode</span>
+              <a href="https://proofmode.org/">proofmode.org</a>
+            </div>
+            <div class="more">
+              <span class="eyebrow">Details on how to</span>
+              <span class="brand">participate</span>
+              <a href="https://gardencrawl.easierdata.org/">gardencrawl.easierdata.org</a>
+            </div>
+          </footer>
+        </div>
+        <div class="contact">Questions or concerns? <a href="mailto:umdgardencrawl@gmail.com">umdgardencrawl@gmail.com</a></div>
+      </div>
+    </figure>
+
+    <figure class="frame">
+      <figcaption>Light · letter</figcaption>
+      <div class="sheet" data-theme="light">
+        <div class="inset" aria-hidden="true"></div>
+        <div class="inner">
+          <header class="masthead">
+            <div class="kicker">
+              <span>Campus wide event | College Park, MD |</span>
+              <span class="audience">Open to the UMD Community</span>
+            </div>
+            <div class="hero">
+              <h2 class="claim">Real Places.<br />Real Moments.<br /><em>Verified.</em></h2>
+              <div class="partners">
+                <span class="lockup"><img src="easier-data.png" alt="Easier Data Initiative" /></span>
+                <span class="lockup"><img class="cgis" src="cgis.jpg" alt="Center for Geospatial Information Science, University of Maryland" /></span>
+              </div>
+            </div>
+            <div class="when">
+              <p class="invite">Join the UMD Garden Crawl</p>
+              <p class="dates">09 Oct – 08 Nov 2026</p>
+            </div>
+            <p class="dek">Take part for a chance to win <strong class="prize">up to $1,000</strong> in gift cards and prizes while helping build a trusted record of UMD’s living landscape.</p>
+          </header>
+
+          <div class="specimen">
+            <article class="card">
+              <dl class="spec">
+                <div class="row"><dt>garden</dt><dd>Weber Memorial Garden</dd></div>
+                <div class="row"><dt>time</dt><dd>18 Aug 2026  ·  12:16 EDT</dd></div>
+                <div class="row"><dt>coordinates</dt><dd class="hi">38.99070,  −76.94155</dd></div>
+                <div class="row"><dt>wallet</dt><dd class="hi">0xbEd1…d5cE</dd></div>
+                <div class="row"><dt>proofset_cid</dt><dd class="hi">bafybeigy6…u3xpla</dd></div>
+                <div class="row"><dt>uid</dt><dd class="hi">0x44225f…3591e5</dd></div>
+                <div class="card-foot">
+                  <span class="chip-ok"><span class="chip-dot" aria-hidden="true"></span>Verified</span>
+                  <a class="proofcheck" href="https://check.proofmode.org/#bafybeigy6ysecknnlqk5qkfxsv2z7mxahjqyvp3xbvinlaqosrcou3xpla">Verify on ProofCheck</a>
+                </div>
+              </dl>
+              <div class="photo">
+                <img src="weber-memorial.jpg" alt="Tiger swallowtail on lilac at Weber Memorial Garden" />
+              </div>
+            </article>
+          </div>
+
+          <footer class="colophon">
+            <div class="capture"><span class="platform">Android Only</span>
+              <img src="proofmode-mark.svg" alt="" width="46" height="46" />
+              <span class="eyebrow">Capture with</span>
+              <span class="brand">Proofmode</span>
+              <a href="https://proofmode.org/">proofmode.org</a>
+            </div>
+            <div class="more">
+              <span class="eyebrow">Details on how to</span>
+              <span class="brand">participate</span>
+              <a href="https://gardencrawl.easierdata.org/">gardencrawl.easierdata.org</a>
+            </div>
+          </footer>
+        </div>
+        <div class="contact">Questions or concerns? <a href="mailto:umdgardencrawl@gmail.com">umdgardencrawl@gmail.com</a></div>
+      </div>
+    </figure>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js"></script>
+  <script>
+    function pickAssets() {
+      return new Promise(resolve => {
+        alert("Since this file is open from your computer, select the images from the same folder " +
+              "(logos, photo, Proofmode mark) in the next window. This is a one-time step.");
+        const inp = document.createElement("input");
+        inp.type = "file";
+        inp.multiple = true;
+        inp.accept = "image/*";
+        inp.onchange = () => resolve([...inp.files]);
+        inp.oncancel = () => resolve([]);
+        inp.click();
+      });
+    }
+    async function embedAssets(files) {
+      const byName = {};
+      for (const f of files) {
+        byName[f.name] = await new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onload = () => res(r.result);
+          r.onerror = () => rej(new Error("Could not read " + f.name));
+          r.readAsDataURL(f);
+        });
+      }
+      const missing = new Set();
+      document.querySelectorAll(".sheet img").forEach(img => {
+        const name = decodeURIComponent((img.getAttribute("src") || "").split("/").pop());
+        if (name.startsWith("data:")) return;
+        if (byName[name]) img.src = byName[name];
+        else missing.add(name);
+      });
+      if (missing.size) throw new Error("Missing image files: " + [...missing].join(", "));
+    }
+
+    async function exportPNGs(btn) {
+      if (!window.htmlToImage) {
+        alert("The export library didn't load. Check your internet connection and reload.");
+        return;
+      }
+      const root = document.documentElement;
+      const prev = root.style.getPropertyValue("--preview");
+      const label = btn.textContent;
+      // Opened straight from disk (file://), browsers block reading the local images
+      // for export, so ask for them once and load them in as embedded data.
+      let picked = null;
+      if (location.protocol === "file:" && !window.__assetsEmbedded) {
+        picked = await pickAssets(); // must run inside the click, before other awaits
+        if (!picked.length) return;
+      }
+      btn.disabled = true;
+      try {
+        if (picked) { await embedAssets(picked); window.__assetsEmbedded = true; }
+        root.style.setProperty("--preview", "1"); // export at true size
+        if (document.fonts && document.fonts.ready) await document.fonts.ready;
+        for (const sheet of document.querySelectorAll(".sheet")) {
+          const theme = sheet.dataset.theme;
+          btn.textContent = "Exporting " + theme + "…";
+          const url = await htmlToImage.toPng(sheet, {
+            width: 816, height: 1056, pixelRatio: 300 / 96, // 8.5×11in at 300 dpi (2550×3300)
+            style: { zoom: "1", margin: "0" }
+          });
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "garden-crawl-ledger-" + theme + ".png";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          await new Promise(r => setTimeout(r, 500));
+        }
+      } catch (err) {
+        console.error(err);
+        const msg = err && err.message ? err.message : "an image or font could not be loaded";
+        alert("Export failed: " + msg);
+      } finally {
+        if (prev) root.style.setProperty("--preview", prev);
+        else root.style.removeProperty("--preview");
+        btn.textContent = label;
+        btn.disabled = false;
+      }
+    }
+
+    function printSheets(which) {
+      document.body.dataset.print = which;
+      window.print();
+    }
+    window.addEventListener("afterprint", () => {
+      delete document.body.dataset.print;
+    });
+  </script>
+</body>
+</html>
