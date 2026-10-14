@@ -1,6 +1,6 @@
 # UMD Garden Crawl
 
-Public campaign website for the UMD Garden Crawl (October 1–31, 2026). Built with Astro and pnpm. The site explains the event and links out to Proofmode and the Public submission map.
+Public campaign website for the UMD Garden Crawl (October 9th - November 8th, 2026). Built with Astro and pnpm. The site explains the event and links out to Proofmode and the Public submission map.
 
 ## Commands
 

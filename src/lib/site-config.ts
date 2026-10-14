@@ -1,19 +1,26 @@
 export const siteConfig = {
   eventTitle: 'UMD Garden Crawl',
-  eventDates: 'October 1–31, 2026',
+  eventDates: 'October 9th - November 8th, 2026',
   // Compact form for chrome that has no room for the long sentence form:
   // the announcement strip and the footer.
-  eventDatesShort: '01–31 Oct 2026',
-  audienceLine: 'Eligible UMD students, subject to organizer confirmation',
+  eventDatesShort: 'Oct. 9 - Nov. 8, 2026',
+  audienceLine: 'Open to the UMD Campus Community',
   supportEmail: null as string | null,
   proofMode: { version: '{{not yet validated}}', verifiedOn: '{{pending walkthrough}}' },
   partners: [
-    'Open Geospatial Consortium',
-    'UMD Department of Geographical Sciences',
-    'Astral',
-    'Filecoin Foundation for the Decentralized Web',
-    'Climate Collective',
-    'International Center for Innovation in Geospatial Analytics & Earth Observation',
+    { name: 'Decentralized Geospatial Collaborative', logo: '/logos/decentralized-geo.png', url: 'https://decentralizedgeo.org/' },
+    { name: 'EASIER Data Initiative', logo: '/logos/easier-data.png', url: 'https://easierdata.org/' },
+    { name: 'UMD Department of Geographical Sciences', logo: '/logos/UMD_Geog.png', url: 'https://geog.umd.edu/' },
+    { name: 'Astral', logo: '/logos/astral.svg', url: 'https://www.astral.global/' },
+    { name: 'Filecoin Foundation for the Decentralized Web', logo: '/logos/FFDW.png', url: 'https://ffdweb.org/' },
+    { name: 'Guardian Project', logo: '/logos/guardian-project.svg', url: 'https://guardianproject.info/' },
+    { name: 'Open Geospatial Consortium', logo: '/logos/OGC.png', url: 'https://www.ogc.org/' },
+    { name: 'Climate Collective', logo: '/logos/climate-collective.gif', url: 'https://climatecollective.org/' },
+    {
+      name: 'International Center for Innovation in Geospatial Analytics & Earth Observation',
+      logo: '/logos/intgeocenter.png',
+      url: 'https://intgeocenter.org/',
+    },
   ],
   gardenReferenceMapUrl:
     'https://uofmd.maps.arcgis.com/apps/instant/countdown/index.html?appid=8b4f00fdc9b04782a4738c473fcbb3a3',

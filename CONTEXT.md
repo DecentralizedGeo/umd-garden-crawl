@@ -1,6 +1,6 @@
 # UMD Garden Crawl Campaign Website
 
-Domain glossary for the public campaign website for the UMD Garden Crawl event (Oct 1–31, 2026). The site explains the event and links out to Proofmode (Capture) and a separate Public submission map (display of Observations). An embedded Garden reference map on `/explore/` is a visual of official Gardens, not a submissions viewer. This website does not process Submissions, media, or blockchain transactions.
+Domain glossary for the public campaign website for the UMD Garden Crawl event (Oct. 9th - Nov. 8th, 2026). The site explains the event and links out to Proofmode (Capture) and a separate Public submission map (display of Observations). An embedded Garden reference map on `/explore/` is a visual of official Gardens, not a submissions viewer. This website does not process Submissions, media, or blockchain transactions.
 
 ## Language
 
