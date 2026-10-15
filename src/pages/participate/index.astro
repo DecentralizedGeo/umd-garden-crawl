@@ -60,14 +60,22 @@ const stepNames = ["Set up Proofmode", "Find a Garden", "Capture", "Confirm the 
             <ExternalLink class="install-link" href="https://proofmode.org/">
               <span>Proofmode site</span>
             </ExternalLink>
-            <ExternalLink class="install-link" href="https://play.google.com/store/apps/details?id=org.witness.proofmode">
-              <span>Install from Google Play</span>
-            </ExternalLink>
             <ExternalLink class="install-link" href="https://play.google.com/apps/testing/org.witness.proofmode">
               <span>Join Google Play open testing</span>
             </ExternalLink>
+            <ExternalLink class="install-link" href="https://play.google.com/apps/internaltest/4700946198132073575">
+              <span>Join Google Play internal testing</span>
+            </ExternalLink>
           </div>
           <p>You'll be using Proofmode&rsquo;s in-app camera to capture your photos.</p>
+    <div class="notice-slot">
+      <Callout intent="Note">
+        <p>
+          It's recommended to join the Google Play internal testing track if you want to receive the latest updates and features throughout the event.
+        </p>
+      </Callout>
+    </div>
+
         </div>
 
         <div class="sub-block">
@@ -77,18 +85,6 @@ const stepNames = ["Set up Proofmode", "Find a Garden", "Capture", "Confirm the 
             submit your photos for the event. Once configured, any photo you take in app will be automatically submitted.
           </p>
           <div class="chip-row">
-            <span class="chip chip-ok-outline">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg
-              >
-              Name, phone, email — never displayed
-            </span>
             <span class="chip chip-warn-outline">
               <svg
                 width="12"
@@ -98,6 +94,18 @@ const stepNames = ["Set up Proofmode", "Find a Garden", "Capture", "Confirm the 
                 stroke="currentColor"
                 stroke-width="2"
                 aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16v.1"></path></svg
+              >
+              Name, phone, email — never displayed
+            </span>
+            <span class="chip chip-ok-outline">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg
               >
               Wallet address — your web3 identity
             </span>
@@ -145,16 +153,6 @@ const stepNames = ["Set up Proofmode", "Find a Garden", "Capture", "Confirm the 
         </p>
       </div>
     </section>
-
-    <div class="notice-slot">
-      <Callout intent="privacy">
-        <p>
-          Before you Capture or confirm a Submission: precise Capture coordinates, Wallet address, Proofset metadata, and IPFS
-          media is publicly exposed. See the{" "}
-          <a href="/privacy/">canonical field list on Privacy</a>.
-        </p>
-      </Callout>
-    </div>
 
     <section class="row" id="step-3" data-step="3">
       <div class="row-label">
