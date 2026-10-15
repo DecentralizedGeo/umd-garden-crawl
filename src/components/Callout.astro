@@ -3,13 +3,14 @@
 // full-bleed within its section, plus the required visible intent label.
 // The API is unchanged — only the visual restyle from the old bordered box.
 interface Props {
-  intent: 'privacy' | 'irreversible' | 'secret';
+  intent: 'privacy' | 'irreversible' | 'secret' | 'Note';
 }
 
 const labels = {
   privacy: 'Privacy',
   irreversible: 'Publication is irreversible',
   secret: 'Secret handling',
+  Note: 'Note',
 } as const;
 
 const { intent } = Astro.props;
